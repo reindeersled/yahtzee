@@ -11,7 +11,7 @@ class Dice{
      * @return {Number} an integer representing the number of rolls remaining for a turn
     */
     get_rolls_remaining(){
-        f
+        
     }
 
     /**
