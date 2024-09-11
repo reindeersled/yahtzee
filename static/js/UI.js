@@ -42,6 +42,7 @@ function reserve_die_handler(event){
 
 function roll_dice_handler(){
     display_feedback("Rolling the dice...", "good");
+    dice.roll()
 
     console.log("Dice values:", dice.get_values());
     console.log("Sum of all dice:", dice.get_sum());

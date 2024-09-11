@@ -3,7 +3,9 @@ class Dice{
     constructor(dice_elements, rolls_remaining_element){
         this.rolls_remaining_element= rolls_remaining_element;
         this.dice_elements= dice_elements;
-        this.photo_names=["blank", "one", "two", "three", "four", "five", "six"]
+        this.photo_names=["blank", "one", "two", "three", "four", "five", "six"];
+
+        this.set = [];
     }
 
     /**
@@ -11,7 +13,7 @@ class Dice{
      * @return {Number} an integer representing the number of rolls remaining for a turn
     */
     get_rolls_remaining(){
-        
+        return rolls_remaining_element
     }
 
     /**
@@ -32,8 +34,11 @@ class Dice{
      * @return {Number} an integer represenitng the sum of all five dice
     */
     get_sum(){
-
-
+        let sum = 0
+        for (let i = 0; i < 5; i++) {
+            sum += this.set[i];
+        }
+        return sum
     }
 
     /**
@@ -52,7 +57,14 @@ class Dice{
      * <br> Uses this.set to update dice
     */
     roll(){
+        this.rolls_remaining_element -= 1;
 
+        for (let i = 0; i < 5; i++){
+            let dice_value = Math.floor(Math.random() * (6) + 1);
+            this.set.push(dice_value);
+        }
+
+        console.log("the dice:" + this.set)
     }
 
     /**
@@ -87,6 +99,7 @@ class Dice{
     set(new_dice_values, new_rolls_remaining){
 
     }
+
 }
 
 export default Dice;
