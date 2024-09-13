@@ -5,7 +5,7 @@ class Dice{
         this.dice_elements= dice_elements;
         this.photo_names=["blank", "one", "two", "three", "four", "five", "six"];
 
-        this.set = [];
+        this.dice_values = [];
     }
 
     /**
@@ -36,7 +36,7 @@ class Dice{
     get_sum(){
         let sum = 0
         for (let i = 0; i < 5; i++) {
-            sum += this.set[i];
+            sum += this.dice_values[i];
         }
         return sum
     }
@@ -97,9 +97,16 @@ class Dice{
      *
     */
     set(new_dice_values, new_rolls_remaining){
+        for (value in new_dice_values){
+            if (value == 0) {
 
+            }
+        }
     }
 
+    
+
 }
+
 
 export default Dice;
