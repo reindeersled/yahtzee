@@ -1,11 +1,9 @@
 console.log("Dice.js connected")
 class Dice{
     constructor(dice_elements, rolls_remaining_element){
-        this.rolls_remaining_element= rolls_remaining_element;
-        this.dice_elements= dice_elements;
+        this.rolls_remaining_element= rolls_remaining_element; //integer
+        this.dice_elements= dice_elements; //photo names
         this.photo_names=["blank", "one", "two", "three", "four", "five", "six"];
-
-        this.dice_values = [];
     }
 
     /**
@@ -23,32 +21,28 @@ class Dice{
      *
      * @return {Array} an array of integers representing dice values of dice pictures
     */
-    get_values(){
-        photos = []
-        return_numbers = []
-        for (i in this.photo_names) {
-            if (this.dice_elements == i+".svg") {
-                photos.push(i);
+    get_values() {
+        let photos = []
+        let return_numbers = []
+
+        for (let names in this.photo_names) {
+            if (this.dice_elements == names+".svg") {
+                photos.push(names);
             }
         }
-        for (num in photos) {
+        for (let num in photos) {
             if (num==1) {
                 return_numbers.push(1);
-            }
-            if (num==2) {
-                return_numbers.push(1);
-            }
-            if (num==3) {
-                return_numbers.push(1);
-            }
-            if (num==4) {
-                return_numbers.push(1);
-            }
-            if (num==5) {
-                return_numbers.push(1);
-            }
-            if (num==6) {
-                return_numbers.push(1);
+            } else if (num==2) {
+                return_numbers.push(2);
+            } else if (num==3) {
+                return_numbers.push(3);
+            } else if (num==4) {
+                return_numbers.push(4);
+            } else if (num==5) {
+                return_numbers.push(5);
+            } else if (num==6) {
+                return_numbers.push(6);
             }
 
         }
@@ -63,9 +57,23 @@ class Dice{
     */
     get_sum(){
         let sum = 0
-        for (let i = 0; i < 5; i++) {
-            sum += this.dice_values[i];
-        }
+        this.dice_elements.forEach(function (name) {
+            if (name == 'blank.svg') {
+                sum += 0;
+            } else if (name == 'one.svg') {
+                sum += 1;
+            } else if (name == 'two.svg') {
+                sum += 2;
+            } else if (name == 'three.svg') {
+                sum += 3;
+            } else if (name == 'four.svg') {
+                sum += 4;
+            } else if (name == 'five.svg') {
+                sum += 5;
+            } else if (name == 'six.svg') {
+                sum += 6;
+            }
+        });
         return sum
     }
 
@@ -85,14 +93,13 @@ class Dice{
      * <br> Uses this.set to update dice
     */
     roll(){
-        this.rolls_remaining_element -= 1;
-
+        let dice_values = []
         for (let i = 0; i < 5; i++){
             let dice_value = Math.floor(Math.random() * (6) + 1);
-            this.set.push(dice_value);
+            dice_values.push(dice_value);
         }
-
-        console.log("the dice:" + this.set)
+        console.log("the rolled dice:" + dice_values)
+        this.set(dice_values, this.rolls_remaining_element)
     }
 
     /**
@@ -100,7 +107,6 @@ class Dice{
      * <br> Uses this.#setDice to update dice
     */
     reset(){
-
     }
 
     /**
@@ -125,9 +131,25 @@ class Dice{
      *
     */
     set(new_dice_values, new_rolls_remaining){
-        for (value in new_dice_values){
-            if (value == 0) {
-                
+        console.log("setting dice");
+        new_rolls_remaining -=1;
+        for (let i=0; i<new_dice_values.length; i++) {
+            if (new_dice_values[i] == 0) {
+                this.dice_elements[i] = "blank.svg";
+            } else if (new_dice_values[i] == 1) {
+                this.dice_elements[i] = "one.svg";
+            } else if (new_dice_values[i] == 2) {
+                this.dice_elements[i] = "two.svg";
+            } else if (new_dice_values[i] == 3) {
+                this.dice_elements[i] = "three.svg";
+            } else if (new_dice_values[i] == 4) {
+                this.dice_elements[i] = "four.svg";
+            } else if (new_dice_values[i] == 5) {
+                this.dice_elements[i] = "five.svg";
+            } else if (new_dice_values[i] == 6) {
+                this.dice_elements[i] = "six.svg";
+            } else if (new_dice_values[i] == -1) {
+                this.dice_elements[i] = this.dice_elements[i];
             }
         }
     }
