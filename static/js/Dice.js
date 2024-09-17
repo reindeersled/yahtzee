@@ -24,7 +24,35 @@ class Dice{
      * @return {Array} an array of integers representing dice values of dice pictures
     */
     get_values(){
+        photos = []
+        return_numbers = []
+        for (i in this.photo_names) {
+            if (this.dice_elements == i+".svg") {
+                photos.push(i);
+            }
+        }
+        for (num in photos) {
+            if (num==1) {
+                return_numbers.push(1);
+            }
+            if (num==2) {
+                return_numbers.push(1);
+            }
+            if (num==3) {
+                return_numbers.push(1);
+            }
+            if (num==4) {
+                return_numbers.push(1);
+            }
+            if (num==5) {
+                return_numbers.push(1);
+            }
+            if (num==6) {
+                return_numbers.push(1);
+            }
 
+        }
+        return return_numbers
     }
 
     /**
@@ -99,7 +127,7 @@ class Dice{
     set(new_dice_values, new_rolls_remaining){
         for (value in new_dice_values){
             if (value == 0) {
-
+                
             }
         }
     }
