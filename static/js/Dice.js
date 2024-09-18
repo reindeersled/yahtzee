@@ -2,7 +2,7 @@ console.log("Dice.js connected")
 class Dice{
     constructor(dice_elements, rolls_remaining_element){
         this.rolls_remaining_element= rolls_remaining_element; //integer
-        this.dice_elements= dice_elements; //photo names
+        this.dice_elements= dice_elements; //photo names, with the .svg
         this.photo_names=["blank", "one", "two", "three", "four", "five", "six"];
     }
 
@@ -22,29 +22,22 @@ class Dice{
      * @return {Array} an array of integers representing dice values of dice pictures
     */
     get_values() {
-        let photos = []
-        let return_numbers = []
+        let photos = [];
+        let return_numbers = [];
 
-        for (let names in this.photo_names) {
-            if (this.dice_elements == names+".svg") {
-                photos.push(names);
+        for (let dice of this.dice_elements) {
+            for (let names of this.photo_names) {
+                if (dice == names+".svg") {
+                    photos.push(names);
+                }
             }
         }
-        for (let num in photos) {
-            if (num==1) {
-                return_numbers.push(1);
-            } else if (num==2) {
-                return_numbers.push(2);
-            } else if (num==3) {
-                return_numbers.push(3);
-            } else if (num==4) {
-                return_numbers.push(4);
-            } else if (num==5) {
-                return_numbers.push(5);
-            } else if (num==6) {
-                return_numbers.push(6);
+        for (let name of photos) {
+            for (let num_index in this.photo_names) {
+                if (name == this.photo_names[num_index]) {
+                    return_numbers.push(num_index);
+                }
             }
-
         }
         return return_numbers
     }
@@ -84,7 +77,17 @@ class Dice{
      * @return {Array} an array of six integers representing counts of the six die faces
     */
     get_counts(){
+        let count = [0,0,0,0,0,0];
+        let photos = ["one", "two", "three", "four", "five", "six"];
 
+        for (let die of this.dice_elements) {
+            for (let photo_index=0; photo_index<photos.length;photo_index++) {
+                if (die.includes(photos[photo_index])) {
+                    count[photo_index] += 1;
+                }
+            }
+        }
+        return count
     }
 
     /**
@@ -98,7 +101,7 @@ class Dice{
             let dice_value = Math.floor(Math.random() * (6) + 1);
             dice_values.push(dice_value);
         }
-        console.log("the rolled dice:" + dice_values)
+        console.log("the rolled dice: " + dice_values)
         this.set(dice_values, this.rolls_remaining_element)
     }
 
@@ -107,6 +110,8 @@ class Dice{
      * <br> Uses this.#setDice to update dice
     */
     reset(){
+        new_dice_values = [0,0,0,0,0]
+        this.set(new_dice_values, 3);
     }
 
     /**
@@ -118,7 +123,7 @@ class Dice{
      * @param {Object} element the <img> element representing the die to reserve
     */
     reserve(die_element){
-
+        
     }
 
     /**
@@ -131,7 +136,7 @@ class Dice{
      *
     */
     set(new_dice_values, new_rolls_remaining){
-        console.log("setting dice");
+        console.log("setting dice...");
         new_rolls_remaining -=1;
         for (let i=0; i<new_dice_values.length; i++) {
             if (new_dice_values[i] == 0) {
@@ -153,9 +158,6 @@ class Dice{
             }
         }
     }
-
-    
-
 }
 
 
