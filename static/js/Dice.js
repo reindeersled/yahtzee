@@ -27,14 +27,14 @@ class Dice{
 
         for (let dice of this.dice_elements) {
             for (let names of this.photo_names) {
-                if (dice == names+".svg") {
+                if (dice.includes(names)) {
                     photos.push(names);
                 }
             }
         }
         for (let name of photos) {
-            for (let num_index of this.photo_names) {
-                if (name == this.photo_names[num_index]) {
+            for (let num_index=0; num_index<this.photo_names.length;num_index++) {
+                if (name.includes(this.photo_names[num_index])) {
                     return_numbers.push(num_index);
                 }
             }
@@ -50,13 +50,13 @@ class Dice{
     */
     get_sum(){
         let sum = 0
-        this.dice_elements.forEach(function (name) {
+        for (let dice of this.dice_elements) {
             for (let photo_index=0; photo_index<this.photo_names.length;photo_index++) {
-                if (name == this.photo_names[photo_index] + ".svg") {
+                if (dice.includes(this.photo_names[photo_index])) {
                     sum += photo_index;
                 }
             }
-        });
+        }
         return sum
     }
 
@@ -113,7 +113,7 @@ class Dice{
      * @param {Object} element the <img> element representing the die to reserve
     */
     reserve(die_element){
-        
+        die_element.classList.toggle('reserved');
     }
 
     /**
@@ -144,7 +144,7 @@ class Dice{
             } else if (new_dice_values[i] == 6) {
                 this.dice_elements[i] = "six.svg";
             } else if (new_dice_values[i] == -1) {
-                this.reserve(this.dice_elements[i])``
+                this.reserve(this.dice_elements[i]);
             }
         }
     }
