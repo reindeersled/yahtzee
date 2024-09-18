@@ -11,7 +11,7 @@ class Dice{
      * @return {Number} an integer representing the number of rolls remaining for a turn
     */
     get_rolls_remaining(){
-        return rolls_remaining_element
+        return this.rolls_remaining_element;
     }
 
     /**
@@ -33,7 +33,7 @@ class Dice{
             }
         }
         for (let name of photos) {
-            for (let num_index in this.photo_names) {
+            for (let num_index of this.photo_names) {
                 if (name == this.photo_names[num_index]) {
                     return_numbers.push(num_index);
                 }
@@ -51,20 +51,10 @@ class Dice{
     get_sum(){
         let sum = 0
         this.dice_elements.forEach(function (name) {
-            if (name == 'blank.svg') {
-                sum += 0;
-            } else if (name == 'one.svg') {
-                sum += 1;
-            } else if (name == 'two.svg') {
-                sum += 2;
-            } else if (name == 'three.svg') {
-                sum += 3;
-            } else if (name == 'four.svg') {
-                sum += 4;
-            } else if (name == 'five.svg') {
-                sum += 5;
-            } else if (name == 'six.svg') {
-                sum += 6;
+            for (let photo_index=0; photo_index<this.photo_names.length;photo_index++) {
+                if (name == this.photo_names[photo_index] + ".svg") {
+                    sum += photo_index;
+                }
             }
         });
         return sum
@@ -154,7 +144,7 @@ class Dice{
             } else if (new_dice_values[i] == 6) {
                 this.dice_elements[i] = "six.svg";
             } else if (new_dice_values[i] == -1) {
-                this.dice_elements[i] = this.dice_elements[i];
+                this.reserve(this.dice_elements[i])``
             }
         }
     }
