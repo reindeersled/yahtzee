@@ -37,7 +37,8 @@ let score_elements = Array.from(document.getElementsByClassName("score"));
 //---------Event Handlers-------//
 function reserve_die_handler(event){
     console.log("Trying to reserve "+event.target.id);
-    dice.reserve(event.target.id);
+    dice.reserve(document.getElementById(event.target.id));
+    console.log(document.getElementById(event.target.id))
 }
 
 function roll_dice_handler(){

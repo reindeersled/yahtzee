@@ -94,7 +94,7 @@ class Dice{
             let dice_value = Math.floor(Math.random() * (6) + 1);
             dice_values.push(dice_value);
         }
-        this.set(dice_values, this.rolls_remaining_element.innerHTML);
+        this.set(dice_values, Number(this.rolls_remaining_element.innerHTML-1));
     }
 
     /**
@@ -104,6 +104,9 @@ class Dice{
     reset(){
         let new_dice_values = [0,0,0,0,0];
         this.set(new_dice_values, 3);
+        for (let dice of this.dice_elements) {
+            dice.classList.remove("reserved");
+        }
     }
 
     /**
@@ -115,9 +118,8 @@ class Dice{
      * @param {Object} element the <img> element representing the die to reserve
     */
     reserve(die_element){
-        console.log("reserving...")
-        die_element.classList.toggle('reserved');
-        console.log(die_element.get_attribute("class"))
+        die_element.classList.toggle("reserved");
+        console.log(die_element.getAttribute("class"))
     }
 
     /**
@@ -147,6 +149,7 @@ class Dice{
             } else if (new_dice_values[i] == 6) {
                 this.dice_elements[i].src = "img/six.svg";
             } else if (new_dice_values[i] == -1) {
+                console.log("reserving...");
                 this.reserve(this.dice_elements[i]);
             }
         }
