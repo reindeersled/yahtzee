@@ -26,8 +26,9 @@ class Dice{
         let return_numbers = [];
 
         for (let dice of this.dice_elements) {
+            let dice_src = dice.src
             for (let names of this.photo_names) {
-                if (dice.includes(names)) {
+                if (dice_src.includes(names)) {
                     photos.push(names);
                 }
             }
@@ -51,8 +52,9 @@ class Dice{
     get_sum(){
         let sum = 0
         for (let dice of this.dice_elements) {
+            let dice_src = dice.src
             for (let photo_index=0; photo_index<this.photo_names.length;photo_index++) {
-                if (dice.includes(this.photo_names[photo_index])) {
+                if (dice_src.includes(this.photo_names[photo_index])) {
                     sum += photo_index;
                 }
             }
@@ -71,8 +73,9 @@ class Dice{
         let photos = ["one", "two", "three", "four", "five", "six"];
 
         for (let die of this.dice_elements) {
+            let die_src = die.src
             for (let photo_index=0; photo_index<photos.length;photo_index++) {
-                if (die.includes(photos[photo_index])) {
+                if (die_src.includes(photos[photo_index])) {
                     count[photo_index] += 1;
                 }
             }
@@ -130,19 +133,19 @@ class Dice{
         new_rolls_remaining -=1;
         for (let i=0; i<new_dice_values.length; i++) {
             if (new_dice_values[i] == 0) {
-                this.dice_elements[i] = "blank.svg";
+                this.dice_elements[i].src = "img/blank.svg";
             } else if (new_dice_values[i] == 1) {
-                this.dice_elements[i] = "one.svg";
+                this.dice_elements[i].src = "img/one.svg";
             } else if (new_dice_values[i] == 2) {
-                this.dice_elements[i] = "two.svg";
+                this.dice_elements[i].src = "img/two.svg";
             } else if (new_dice_values[i] == 3) {
-                this.dice_elements[i] = "three.svg";
+                this.dice_elements[i].src = "img/three.svg";
             } else if (new_dice_values[i] == 4) {
-                this.dice_elements[i] = "four.svg";
+                this.dice_elements[i].src = "img/four.svg";
             } else if (new_dice_values[i] == 5) {
-                this.dice_elements[i] = "five.svg";
+                this.dice_elements[i].src = "img/five.svg";
             } else if (new_dice_values[i] == 6) {
-                this.dice_elements[i] = "six.svg";
+                this.dice_elements[i].src = "img/six.svg";
             } else if (new_dice_values[i] == -1) {
                 this.reserve(this.dice_elements[i]);
             }

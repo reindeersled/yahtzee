@@ -13,7 +13,7 @@ for (let i = 0; i<5; i++){
     dice_elements.push(die);
 }
 let rolls_remainging_element = document.getElementById("rolls_remaining");
-
+console.log(dice_elements);
 let dice = new Dice(dice_elements, rolls_remainging_element);
 window.dice = dice; //useful for testing to add a reference to global window object
 
