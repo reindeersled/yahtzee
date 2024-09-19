@@ -1,8 +1,8 @@
 console.log("Dice.js connected")
 class Dice{
     constructor(dice_elements, rolls_remaining_element){
-        this.rolls_remaining_element= rolls_remaining_element; //integer
-        this.dice_elements= dice_elements; //photo names, with the .svg
+        this.rolls_remaining_element= rolls_remaining_element; //html object
+        this.dice_elements= dice_elements; //html element of the photo svgs
         this.photo_names=["blank", "one", "two", "three", "four", "five", "six"];
     }
 
@@ -11,7 +11,7 @@ class Dice{
      * @return {Number} an integer representing the number of rolls remaining for a turn
     */
     get_rolls_remaining(){
-        return this.rolls_remaining_element;
+        return Number(this.rolls_remaining_element.innerHTML);
     }
 
     /**
@@ -50,16 +50,16 @@ class Dice{
      * @return {Number} an integer represenitng the sum of all five dice
     */
     get_sum(){
-        let sum = 0
+        let sum = 0;
         for (let dice of this.dice_elements) {
-            let dice_src = dice.src
+            let dice_src = dice.src;
             for (let photo_index=0; photo_index<this.photo_names.length;photo_index++) {
                 if (dice_src.includes(this.photo_names[photo_index])) {
                     sum += photo_index;
                 }
             }
         }
-        return sum
+        return sum;
     }
 
     /**
@@ -89,13 +89,12 @@ class Dice{
      * <br> Uses this.set to update dice
     */
     roll(){
-        let dice_values = []
+        let dice_values = [];
         for (let i = 0; i < 5; i++){
             let dice_value = Math.floor(Math.random() * (6) + 1);
             dice_values.push(dice_value);
         }
-        console.log("the rolled dice: " + dice_values)
-        this.set(dice_values, this.rolls_remaining_element)
+        this.set(dice_values, this.rolls_remaining_element.innerHTML);
     }
 
     /**
@@ -103,7 +102,7 @@ class Dice{
      * <br> Uses this.#setDice to update dice
     */
     reset(){
-        new_dice_values = [0,0,0,0,0]
+        let new_dice_values = [0,0,0,0,0];
         this.set(new_dice_values, 3);
     }
 
@@ -116,7 +115,9 @@ class Dice{
      * @param {Object} element the <img> element representing the die to reserve
     */
     reserve(die_element){
+        console.log("reserving...")
         die_element.classList.toggle('reserved');
+        console.log(die_element.get_attribute("class"))
     }
 
     /**
@@ -129,8 +130,7 @@ class Dice{
      *
     */
     set(new_dice_values, new_rolls_remaining){
-        console.log("setting dice...");
-        new_rolls_remaining -=1;
+        this.rolls_remaining_element.innerHTML = new_rolls_remaining;
         for (let i=0; i<new_dice_values.length; i++) {
             if (new_dice_values[i] == 0) {
                 this.dice_elements[i].src = "img/blank.svg";

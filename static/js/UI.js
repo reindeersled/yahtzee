@@ -13,7 +13,6 @@ for (let i = 0; i<5; i++){
     dice_elements.push(die);
 }
 let rolls_remainging_element = document.getElementById("rolls_remaining");
-console.log(dice_elements);
 let dice = new Dice(dice_elements, rolls_remainging_element);
 window.dice = dice; //useful for testing to add a reference to global window object
 
@@ -38,6 +37,7 @@ let score_elements = Array.from(document.getElementsByClassName("score"));
 //---------Event Handlers-------//
 function reserve_die_handler(event){
     console.log("Trying to reserve "+event.target.id);
+    dice.reserve(event.target.id);
 }
 
 function roll_dice_handler(){
