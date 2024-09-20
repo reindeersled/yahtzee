@@ -1,14 +1,16 @@
 head {
-    background-color: lightblue;
+    background-color: antiquewhite;
+    font-family: "Protest Guerrilla", sans-serif;
+    color:rgb(145, 84, 75);
 }
 
 body {
-    background-color: lightblue;
+    background-color: antiquewhite;
+    font-family: "Protest Guerrilla", sans-serif; 
+    color:rgb(145, 84, 75)
 }
 
-.protest-guerrilla-regular {
-    font-family: "Protest Guerrilla", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
+.reserved {
+    border: 1px solid red;
+}
 

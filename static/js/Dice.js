@@ -94,6 +94,13 @@ class Dice{
             let dice_value = Math.floor(Math.random() * (6) + 1);
             dice_values.push(dice_value);
         }
+
+        for (let dice_index=0; dice_index<this.dice_elements.length; dice_index++) {
+            if (this.dice_elements[dice_index].className.includes("reserved")) {
+                dice_values[dice_index] = -1;
+            }
+        }
+
         this.set(dice_values, Number(this.rolls_remaining_element.innerHTML-1));
     }
 
@@ -118,14 +125,17 @@ class Dice{
      * @param {Object} element the <img> element representing the die to reserve
     */
     reserve(die_element){
-        die_element.classList.toggle("reserved");
-        console.log(die_element.getAttribute("class"))
+        if (die_element.src.includes("/img/blank.svg")) {
+            console.log("can't reserve blank dice");
+        } else {
+            die_element.classList.toggle("reserved");
+        }
     }
 
     /**
      * A useful testing method to conveniently change dice / rolls remaining
      * <br> A value of 0 indicates that the die should be blank
-     * <br> A value of -1 indicates that the die is reserved and should not be updated
+     * <br> A value of -1 indicates that the die should not be updated
      *
      * @param {Array} new_dice_values an array of five integers, one for each die value
      * @param {Number} new_rolls_remaining an integer representing the new value for rolls remaining
@@ -134,24 +144,9 @@ class Dice{
     set(new_dice_values, new_rolls_remaining){
         this.rolls_remaining_element.innerHTML = new_rolls_remaining;
         for (let i=0; i<new_dice_values.length; i++) {
-            if (new_dice_values[i] == 0) {
-                this.dice_elements[i].src = "img/blank.svg";
-            } else if (new_dice_values[i] == 1) {
-                this.dice_elements[i].src = "img/one.svg";
-            } else if (new_dice_values[i] == 2) {
-                this.dice_elements[i].src = "img/two.svg";
-            } else if (new_dice_values[i] == 3) {
-                this.dice_elements[i].src = "img/three.svg";
-            } else if (new_dice_values[i] == 4) {
-                this.dice_elements[i].src = "img/four.svg";
-            } else if (new_dice_values[i] == 5) {
-                this.dice_elements[i].src = "img/five.svg";
-            } else if (new_dice_values[i] == 6) {
-                this.dice_elements[i].src = "img/six.svg";
-            } else if (new_dice_values[i] == -1) {
-                console.log("reserving...");
-                this.reserve(this.dice_elements[i]);
-            }
+            if (new_dice_values[i] !== -1) {
+                this.dice_elements[i].src = "img/" + this.photo_names[new_dice_values[i]] + ".svg"
+            } 
         }
     }
 }
