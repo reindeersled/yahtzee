@@ -205,11 +205,8 @@ class Dice_Helper_Function_Tests(unittest.TestCase):
                     ActionChains(self.browser).double_click(die_element).perform()
                 original_order.append((die_element.get_attribute("src").split("/")[-1], should_reserve))
             
-            self.browser.save_screenshot('before.png'); #for debugging purposes
             self.browser.execute_script(f"window.dice.roll();")
-            self.browser.save_screenshot('after.png'); #for debugging purposes
 
-            
             for i in range(5):#reserved dice should match original image names and still be reserved
                 die_element = self.browser.find_element(By.ID, f"die_{i}")
                 die_element_image_name = die_element.get_attribute("src").split("/")[-1]

@@ -1,6 +1,6 @@
 console.log("UI.js connected")
 import Dice from './Dice.js';
-//import Gamecard from './Gamecard.js';
+import Gamecard from './Gamecard.js';
 
 //-------Dice Setup--------//
 let roll_button = document.getElementById('roll_button'); 
@@ -28,17 +28,18 @@ for (let category of category_elements){
     });
 }
 let score_elements = Array.from(document.getElementsByClassName("score"));
-//let gamecard = new Gamecard(category_elements, score_elements, dice);
-//window.gamecard = gamecard; //useful for testing to add a reference to global window object
+let gamecard = new Gamecard(category_elements, score_elements, dice);
+window.gamecard = gamecard; //useful for testing to add a reference to global window object
+console.log(category_elements, 
+    score_elements, 
+    dice);
 
 
 
 
 //---------Event Handlers-------//
 function reserve_die_handler(event){
-    console.log("Trying to reserve "+event.target.id);
     dice.reserve(document.getElementById(event.target.id));
-    console.log(document.getElementById(event.target.id))
 }
 
 function roll_dice_handler(){
@@ -52,6 +53,7 @@ function roll_dice_handler(){
 
 function enter_score_handler(event){
     console.log("Score entry attempted for: ", event.target.id);
+    console.log(gamecard.is_valid_score(event.target.id, dice.get_sum));
 }
 
 //------Feedback ---------//
