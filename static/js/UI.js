@@ -54,7 +54,8 @@ function roll_dice_handler(){
 
 function enter_score_handler(event){
     console.log("Score entry attempted for: ", event.target.id);
-    console.log(gamecard.is_valid_score(event.target.id, 2));
+    dice.set([2,3,4,5,6], 3)
+    console.log(gamecard.is_valid_score(event.target.id, 40));
 }
 
 //------Feedback ---------//

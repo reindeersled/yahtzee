@@ -34,50 +34,62 @@ class Gamecard{
         let html = document.getElementById(category);
 
         if (html.className.includes("upper")) { //for upper category
-            let category_number = 0;
             let sum = 0;
+            let digit = 0;
 
-            for (let number_index=0; number_index<this.numbers.length;number_index++) {
-                if (html.id.includes(this.numbers[number_index])) {
-                    category_number = number_index;
+            for(let num_index=0; num_index<this.numbers.length;num_index++) {
+                if (html.id.includes(this.numbers[num_index])) {
+                    digit = num_index;
                 }
             }
+
             for (let dice of this.dice.dice_elements) {
-                if (dice.id.includes(category_number)) {
-                    sum += category_number;
+                if (dice.src.includes(this.numbers[digit])) {
+                    sum += digit; //how many times the category number shows up
                 }
             }
-            return value==sum;
+            return value == sum; 
         }
         
         if (html.className.includes("lower")) {
-            let dice_counts = this.dice.get_counts()
+            let dice_counts = this.dice.get_counts() //0 index is a rolled 1, 5 index is a rolled 6
             let dice_sum = this.dice.get_sum()
+            console.log(dice_sum, dice_counts);
 
             if (html.id.includes("three")) {
                 for (let count_index=0; count_index<dice_counts.length;count_index++) {
                     if (dice_counts[count_index] == 3) {
-                        return value == count_index * 3; //use if statements again
+                        return value == dice_sum; 
                     }
                 }
             }
             if (html.id.includes("four")) {
                 for (let count_index=0; count_index<dice_counts.length;count_index++) {
                     if (dice_counts[count_index] == 4) {
-                        return value == count_index * 4; //use if statements again
+                        return value == dice_sum;
                     }
                 }
             }
             if (html.id.includes("full_house")) {
                 if (dice_counts.includes(3) && dice_counts.includes(2)) {
-                    if (value == 25) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return value == 25;
                 }
             }
-
+            if (html.id.includes("small")) {
+                
+            }
+            if (html.id.includes("large")) { //oh. can't do == with arrays in javascript
+                if (dice_counts.toString().includes('1,1,1,1,1')) {
+                    return value == 40;
+                } 
+                return false;
+            }
+            if (html.id.includes("yahtzee")) {
+                if (dice_counts.indexOf(5) == -1) {
+                    return false;
+                }
+                return value == 50;
+            }
         }
     }
 
