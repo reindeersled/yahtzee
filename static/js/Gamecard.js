@@ -76,9 +76,12 @@ class Gamecard{
                 }
             }
             if (html.id.includes("small")) {
-                
+                if (dice_counts.toString().includes('1,1,1')) { //oh... no it can be more than 1, can be 2,1,1
+                    return value == 30;
+                }
+                return false;
             }
-            if (html.id.includes("large")) { //oh. can't do == with arrays in javascript
+            if (html.id.includes("large")) { //can't do == with arrays in javascript
                 if (dice_counts.toString().includes('1,1,1,1,1')) {
                     return value == 40;
                 } 
