@@ -30,6 +30,7 @@ for (let category of category_elements){
 let score_elements = Array.from(document.getElementsByClassName("score"));
 let gamecard = new Gamecard(category_elements, score_elements, dice);
 window.gamecard = gamecard; //useful for testing to add a reference to global window object
+
 console.log(category_elements, 
     score_elements, 
     dice);
@@ -53,7 +54,7 @@ function roll_dice_handler(){
 
 function enter_score_handler(event){
     console.log("Score entry attempted for: ", event.target.id);
-    console.log(gamecard.is_valid_score(event.target.id, dice.get_sum));
+    console.log(gamecard.is_valid_score(event.target.id, 2));
 }
 
 //------Feedback ---------//

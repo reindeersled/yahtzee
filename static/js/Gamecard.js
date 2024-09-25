@@ -1,9 +1,11 @@
 class Gamecard{
     
     constructor(category_elements, score_elements, myDice){
-        this.category_elements = category_elements;
-        this.dice=myDice;
-        this.score_elements=score_elements;
+        this.category_elements = category_elements; //html objects
+        this.dice=myDice; //dice
+        this.score_elements=score_elements; //td html objects
+
+        this.numbers = ["blank", "one", "two", "three", "four", "five", "six"];
     }
 
     /**
@@ -15,7 +17,7 @@ class Gamecard{
     is_finished(){
         let full = False;
         
-
+        return full;
     }
 
     /**
@@ -29,10 +31,53 @@ class Gamecard{
      * @return {Boolean} a Boolean value indicating whether the score is valid for the category
     */
     is_valid_score(category, value){
-        let valid = True;
-        for (let input of category) {
-            this.dice.get_counts()
-            this.dice.get_sum()
+        let html = document.getElementById(category);
+
+        if (html.className.includes("upper")) { //for upper category
+            let category_number = 0;
+            let sum = 0;
+
+            for (let number_index=0; number_index<this.numbers.length;number_index++) {
+                if (html.id.includes(this.numbers[number_index])) {
+                    category_number = number_index;
+                }
+            }
+            for (let dice of this.dice.dice_elements) {
+                if (dice.id.includes(category_number)) {
+                    sum += category_number;
+                }
+            }
+            return value==sum;
+        }
+        
+        if (html.className.includes("lower")) {
+            let dice_counts = this.dice.get_counts()
+            let dice_sum = this.dice.get_sum()
+
+            if (html.id.includes("three")) {
+                for (let count_index=0; count_index<dice_counts.length;count_index++) {
+                    if (dice_counts[count_index] == 3) {
+                        return value == count_index * 3; //use if statements again
+                    }
+                }
+            }
+            if (html.id.includes("four")) {
+                for (let count_index=0; count_index<dice_counts.length;count_index++) {
+                    if (dice_counts[count_index] == 4) {
+                        return value == count_index * 4; //use if statements again
+                    }
+                }
+            }
+            if (html.id.includes("full_house")) {
+                if (dice_counts.includes(3) && dice_counts.includes(2)) {
+                    if (value == 25) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
         }
     }
 
