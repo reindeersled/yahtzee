@@ -20,6 +20,7 @@ class Gamecard{
                 return false;
             }
         }
+        return true;
     }
 
     /**
