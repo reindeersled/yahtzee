@@ -34,13 +34,24 @@ class Gamecard{
      * @return {Boolean} a Boolean value indicating whether the score is valid for the category
     */
     is_valid_score(category, value){ //also disables category if valid
-        let html = document.getElementById(category);
+        let html = document.getElementById(category + "_input");
+        let dice_ints = this.dice.get_values();
+        
+        if (dice_ints.indexOf(0) != -1) {
+            return false;
+        }
+        if (typeof value == "string") {
+            return false;
+        }
+        if (value < 0) {
+            return false;
+        }
 
         if (html.className.includes("upper")) { //for upper category
             let sum = 0;
             let digit = 0;
 
-            for(let num_index=0; num_index<this.numbers.length;num_index++) {
+            for(let num_index=0; num_index<this.numbers.length;num_index++) { //converting letter number to int number
                 if (html.id.includes(this.numbers[num_index])) {
                     digit = num_index;
                 }
@@ -48,55 +59,84 @@ class Gamecard{
 
             for (let dice of this.dice.dice_elements) {
                 if (dice.src.includes(this.numbers[digit])) {
-                    sum += digit; //how many times the category number shows up
+                    sum += digit; 
                 }
             }
-            return value == sum; 
+
+            if (value == sum) {
+                html.classList.add("disabled");
+                return true;
+            }
+            return false; 
         }
         
         if (html.className.includes("lower")) {
-            let dice_counts = this.dice.get_counts() //0 index is a rolled 1, 5 index is a rolled 6
-            let dice_sum = this.dice.get_sum()
-            console.log(dice_sum, dice_counts);
+            let dice_counts = this.dice.get_counts(); //0 index is a rolled 1, 5 index is a rolled 6
+            let dice_sum = this.dice.get_sum();
+            let dice_values = this.dice.get_values(); //[1, 1, 1, 1, 1]
 
             if (html.id.includes("three")) {
-                for (let count_index=0; count_index<dice_counts.length;count_index++) {
-                    if (dice_counts[count_index] == 3) {
-                        return value == dice_sum; 
+                if (dice_counts.indexOf(3) != -1 || dice_counts.indexOf(4) != -1 || dice_counts.indexOf(5) != -1) {
+                    if (value == dice_sum) {
+                        html.classList.add("disabled");
+                        return true;
                     }
                 }
+                return value == 0;
             }
             if (html.id.includes("four")) {
-                for (let count_index=0; count_index<dice_counts.length;count_index++) {
-                    if (dice_counts[count_index] == 4) {
-                        return value == dice_sum;
+                if (dice_counts.indexOf(4) != -1 || dice_counts.indexOf(5) != -1) {
+                    if (value == dice_sum) {
+                        html.classList.add("disabled");
+                        return true;
                     }
                 }
+                return value == 0;
             }
             if (html.id.includes("full_house")) {
                 if (dice_counts.includes(3) && dice_counts.includes(2)) {
-                    return value == 25;
+                    if (value == 25) {
+                        html.classList.add("disabled");
+                        return true;
+                    }
                 }
+                return value == 0;
             }
             if (html.id.includes("small")) {
                 for (let i=0;i<dice_counts.length-2;i++) {
                     if (dice_counts[i] > 0 && dice_counts[i+1] > 0 && dice_counts[i+2] > 0) {
-                        return value==30;
+                        if (value == 30) {
+                            html.classList.add("disabled");
+                            return true;
+                        }
                     }
                 }
-                return false;
+                return value == 0;
             }
             if (html.id.includes("large")) { //can't do == with arrays in javascript
                 if (dice_counts.toString().includes('1,1,1,1,1')) {
-                    return value == 40;
+                    if (value == 40) {
+                        html.classList.add("disabled");
+                        return true;
+                    }
                 } 
-                return false;
+                return value == 0;
             }
             if (html.id.includes("yahtzee")) {
-                if (dice_counts.indexOf(5) == -1) {
-                    return false;
+                if (dice_counts.indexOf(5) != -1) {
+                    if (value == 50) {
+                        html.classList.add("disabled");
+                        return true;
+                    }
                 }
-                return value == 50;
+                return value == 0;
+            }
+            if (html.id.includes("chance")) {
+                if (value == dice_sum) {
+                    html.classList.add("disabled");
+                    return true;
+                }
+                return false;
             }
         }
     }

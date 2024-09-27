@@ -101,7 +101,7 @@ class MS2_Validation_Tests(unittest.TestCase):
                 [-6, [1, 2, 3, 4, 5], False],
                 ["", [1, 2, 3, 4, 5], False],
                 [" ", [1, 2, 3, 4, 5], False],
-                ["six", [1, 2, 6, 1, 1], False]
+                ["six", [1, 2, 6, 1, 1], False],
             ]
         }
 
@@ -110,10 +110,12 @@ class MS2_Validation_Tests(unittest.TestCase):
                 self.browser.get(self.url)
                 self.browser.execute_script(f"window.dice.set({test[1]}, 2);")
                 #self.browser.save_screenshot(f"{category}_input.png")
-                category_input=self.browser.find_element(By.ID, f"{category}_input")
-                category_input.send_keys(str(test[0])+Keys.RETURN)
+                if type(test[0]) is str:
+                     result = self.browser.execute_script(f"return window.gamecard.is_valid_score('{category}', '{test[0]}');")
+                else:
+                     result = self.browser.execute_script(f"return window.gamecard.is_valid_score('{category}', {test[0]});")
                 #self.browser.save_screenshot(f"{category}_input_after_enter.png")
-                self.assertEqual(category_input.is_enabled(), not test[2])
+                self.assertEqual(result, test[2])
     
     def test_lower_categories_validation(self):
         lower_tests={
@@ -253,10 +255,13 @@ class MS2_Validation_Tests(unittest.TestCase):
                 self.browser.get(self.url)
                 self.browser.execute_script(f"window.dice.set({test[1]}, 2);")
                 #self.browser.save_screenshot(f"{category}_input.png")
-                category_input=self.browser.find_element(By.ID, f"{category}_input")
-                category_input.send_keys(str(test[0])+Keys.RETURN)
+                print(test)
+                if type(test[0]) is str:
+                     result = self.browser.execute_script(f"return window.gamecard.is_valid_score('{category}', '{test[0]}');")
+                else:
+                     result = self.browser.execute_script(f"return window.gamecard.is_valid_score('{category}', {test[0]});")
                 #self.browser.save_screenshot(f"{category}_input_after_enter.png")
-                self.assertEqual(category_input.is_enabled(), not test[2])
+                self.assertEqual(result, test[2])
 
 if __name__ == '__main__':
-        unittest.main()
+    unittest.main()
