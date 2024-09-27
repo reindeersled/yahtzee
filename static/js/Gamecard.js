@@ -33,7 +33,7 @@ class Gamecard{
      * 
      * @return {Boolean} a Boolean value indicating whether the score is valid for the category
     */
-    is_valid_score(category, value){
+    is_valid_score(category, value){ //also disables category if valid
         let html = document.getElementById(category);
 
         if (html.className.includes("upper")) { //for upper category
@@ -171,9 +171,9 @@ class Gamecard{
             }
         }
      *
-     * @param {Object} gameObject the object version of the scorecard
+     * @param {Object} gameObject the object version of the scorecard 
     */
-    load_scorecard(score_info){
+    load_scorecard(score_info){ //score info IS gameObject...
         document.getElementById("rolls_remaining").innerHTML = score_info.rolls_remaining;
         
         for (let category of gameObject.keys(score_info.upper)) {
