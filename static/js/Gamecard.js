@@ -1,9 +1,9 @@
 class Gamecard{
     
     constructor(category_elements, score_elements, myDice){
-        this.category_elements = category_elements; //html objects
+        this.category_elements = category_elements; //the html inputs
         this.dice=myDice; //dice
-        this.score_elements=score_elements; //td html objects
+        this.score_elements=score_elements; //the sum stuff
 
         this.numbers = ["blank", "one", "two", "three", "four", "five", "six"];
     }
@@ -144,7 +144,7 @@ class Gamecard{
     /**
     * Returns the current Grand Total score for a scorecard
     * 
-    * @return {Number} an integer value representing the curent game score
+    * @return {Number} an integer value representing the current game score
     */
     get_score(){
         return document.getElementById("grand_total").innerHTML;
@@ -154,37 +154,29 @@ class Gamecard{
      * Updates all score elements for a scorecard
     */
     update_scores(){
-       let upper_categories = ["one","two","three","four","five","six"];
-       let lower_categories = ["three_of_a_kind","four_of_a_kind","full_house","small_straight","large_straight","yahtzee","chance"];
-
        let upper_sum = 0;
        let lower_sum = 0;
+       let bonus = 0;
 
-       for (let category of upper_categories) {
-            let html_score = document.getElementById(category + "_input");
-            let score = html_score.innerHTML;
-
-            if (score >= 0) {
-                upper_sum += score;
-                html_score.classList.add("disabled");
+       for (let category of this.categories) {
+            if (category.className.includes("disabled")) {
+                if (category.className.includes("upper")) {
+                    upper_sum += category.value;
+                }
+                if (category.className.includes("lower")) {
+                    lower_sum += category.value;
+                }
             }
-            html_score.classList.remove("disabled")
        }
-       document.getElementById("upper_total").innerHTML = upper_sum;
+       document.getElementById("upper_score").innerHTML = upper_sum;
+       if (upper_sum > 63) {
+            bonus = 35;
+       }
+       document.getElementById("upper_total").innerHTML = upper_sum + bonus;
 
-       for (let category of lower_categories) {
-            let html_score = document.getElementById(category + "_input");
-            let score = html_score.innerHTML;
-
-            if (score >= 0) {
-                lower_sum += score;
-                html_score.classList.add("disabled");
-            }
-            html_score.classList.remove("disabled")
-        }    
-        document.getElementById("lower_total").innerHTML = lower_sum;
-
-        document.getElementById("grand_total").innerHTML = upper_sum + lower_sum;
+       document.getElementById("lower_score").innerHTML = lower_sum;
+       document.getElementById("upper_total_lower").innerHTML = upper_sum + bonus;
+       document.getElementById("grand_total").innerHTML = upper_sum + lower_sum + bonus;
        
     }
 
@@ -211,32 +203,28 @@ class Gamecard{
             }
         }
      *
-     * @param {Object} gameObject the object version of the scorecard 
+     * @param {Object} score_info the object version of the scorecard 
     */
     load_scorecard(score_info){ //score info IS gameObject...
         document.getElementById("rolls_remaining").innerHTML = score_info.rolls_remaining;
-        
-        for (let category of gameObject.keys(score_info.upper)) {
-            let int_score = score_info.upper[category];
-            let html_score = document.getElementById(category)
-            if (int_score >= 0) {
-                html_score.innerHTML = int_score;
-                html_score.classList.add("disabled");
-            }
-            html_score.innerHTML = '';
-            html_score.classList.remove("disabled")
-       }
 
-        for (let category of gameObject.keys(score_info.lower)) {
-            let int_score = score_info.upper[category];
-            let html_score = document.getElementById(category)
-            if (int_score >= 0) {
-                html_score.innerHTML = int_score;
-                html_score.classList.add("disabled");
+        for (let category of score_info.upper.keys()) {
+            if (score_info.upper[category] == -1) {
+                document.getElementById(category + 'input').classList.remove("disabled")
+            } else {
+                document.getElementById(category + 'input').value = score_info.upper[category];
+                document.getElementById(category + 'input').classList.add("disabled")
             }
-        html_score.innerHTML = '';
-        html_score.classList.remove("disabled")
-       }
+        }
+
+        for (let category of score_info.lower.keys()) {
+            if (score_info.lower[category] == -1) {
+                document.getElementById(category + 'input').classList.remove("disabled")
+            } else {
+                document.getElementById(category + 'input').value = score_info.lower[category];
+                document.getElementById(category + 'input').classList.add("disabled")
+            }
+        }
     }
 
     /**
@@ -267,28 +255,23 @@ class Gamecard{
      */
     to_object(){
         let scorecard = {
-            rolls_remaining: document.getElementById("rolls_remaining").innerHTML,
-            upper:  {},
+            rolls_remaining: 0,
+            upper: {},
             lower: {}
         }
 
         let upper_categories = ["one","two","three","four","five","six"];
         for (let category of upper_categories) {
-            if (!document.getElementById(category + "_input").className.includes("disabled")) {
-                scorecard.upper[category] = -1;
-            }
-            scorecard.upper[category] = document.getElementById(category + "_input").innerHTML;
+
+            scorecard.upper[category] = -1;
         }
 
         let lower_categories = ["three_of_a_kind","four_of_a_kind","full_house","small_straight","large_straight","yahtzee","chance"];
         for (let category of lower_categories) {
-            if (!document.getElementById(category + "_input").className.includes("disabled")) {
-                scorecard.lower[category] = -1;
-            }
-            scorecard.lower[category] = document.getElementById(category + "_input").innerHTML;
+            scorecard.lower[category] = -1;
         }
 
-        return scorecard
+        return scorecard;
     }
 }
 
