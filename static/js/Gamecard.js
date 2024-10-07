@@ -3,9 +3,11 @@ class Gamecard{
     constructor(category_elements, score_elements, myDice){
         this.category_elements = category_elements; //the html inputs
         this.dice=myDice; //dice
-        this.score_elements=score_elements; //the sum stuff
+        this.score_elements=score_elements; //the sum stuff, no text boxes
 
         this.numbers = ["blank", "one", "two", "three", "four", "five", "six"];
+        this.upper_categories = ["one","two","three","four","five","six"];
+        this.lower_categories = ["three_of_a_kind","four_of_a_kind","full_house","small_straight","large_straight","yahtzee","chance"];
     }
 
     /**
@@ -16,7 +18,7 @@ class Gamecard{
      */
     is_finished(){
         for (let category of this.category_elements) {
-            if (!category.className.includes('disabled')) {
+            if (!category.hasAttribute("disabled")) {
                 return false;
             }
         }
@@ -64,7 +66,7 @@ class Gamecard{
             }
 
             if (value == sum) {
-                html.classList.add("disabled");
+                html.setAttribute("disabled", "");
                 return true;
             }
             return false; 
@@ -77,8 +79,8 @@ class Gamecard{
 
             if (html.id.includes("three")) {
                 if (dice_counts.indexOf(3) != -1 || dice_counts.indexOf(4) != -1 || dice_counts.indexOf(5) != -1) {
-                    if (value == dice_sum) {
-                        html.classList.add("disabled");
+                    if (value == dice_sum || value == 0) {
+                        html.setAttribute("disabled", "");
                         return true;
                     }
                 }
@@ -86,8 +88,8 @@ class Gamecard{
             }
             if (html.id.includes("four")) {
                 if (dice_counts.indexOf(4) != -1 || dice_counts.indexOf(5) != -1) {
-                    if (value == dice_sum) {
-                        html.classList.add("disabled");
+                    if (value == dice_sum || value == 0) {
+                        html.setAttribute("disabled", "");
                         return true;
                     }
                 }
@@ -95,8 +97,8 @@ class Gamecard{
             }
             if (html.id.includes("full_house")) {
                 if (dice_counts.includes(3) && dice_counts.includes(2)) {
-                    if (value == 25) {
-                        html.classList.add("disabled");
+                    if (value == 25 || value == 0) {
+                        html.setAttribute("disabled", "");
                         return true;
                     }
                 }
@@ -105,8 +107,8 @@ class Gamecard{
             if (html.id.includes("small")) {
                 for (let i=0;i<dice_counts.length-2;i++) {
                     if (dice_counts[i] > 0 && dice_counts[i+1] > 0 && dice_counts[i+2] > 0) {
-                        if (value == 30) {
-                            html.classList.add("disabled");
+                        if (value == 30 || value == 0) {
+                            html.setAttribute("disabled", "");
                             return true;
                         }
                     }
@@ -115,8 +117,8 @@ class Gamecard{
             }
             if (html.id.includes("large")) { //can't do == with arrays in javascript
                 if (dice_counts.toString().includes('1,1,1,1,1')) {
-                    if (value == 40) {
-                        html.classList.add("disabled");
+                    if (value == 40 || value == 0) {
+                        html.setAttribute("disabled", "");
                         return true;
                     }
                 } 
@@ -124,16 +126,16 @@ class Gamecard{
             }
             if (html.id.includes("yahtzee")) {
                 if (dice_counts.indexOf(5) != -1) {
-                    if (value == 50) {
-                        html.classList.add("disabled");
+                    if (value == 50 || value == 0) {
+                        html.setAttribute("disabled", "");
                         return true;
                     }
                 }
                 return value == 0;
             }
             if (html.id.includes("chance")) {
-                if (value == dice_sum) {
-                    html.classList.add("disabled");
+                if (value == dice_sum || value == 0) {
+                    html.setAttribute("disabled", "");
                     return true;
                 }
                 return false;
@@ -147,7 +149,7 @@ class Gamecard{
     * @return {Number} an integer value representing the current game score
     */
     get_score(){
-        return document.getElementById("grand_total").innerHTML;
+        return parseInt(document.getElementById("grand_total").innerText);
     }
 
     /**
@@ -158,19 +160,20 @@ class Gamecard{
        let lower_sum = 0;
        let bonus = 0;
 
-       for (let category of this.categories) {
-            if (category.className.includes("disabled")) {
+       for (let category of this.category_elements) {
+            if (category.hasAttribute("disabled")) {
                 if (category.className.includes("upper")) {
-                    upper_sum += category.value;
+                    upper_sum += Number(category.value);
                 }
                 if (category.className.includes("lower")) {
-                    lower_sum += category.value;
+                    lower_sum += Number(category.value);
                 }
             }
        }
        document.getElementById("upper_score").innerHTML = upper_sum;
        if (upper_sum > 63) {
             bonus = 35;
+            document.getElementById("upper_bonus").innerHTML = 35;
        }
        document.getElementById("upper_total").innerHTML = upper_sum + bonus;
 
@@ -206,23 +209,25 @@ class Gamecard{
      * @param {Object} score_info the object version of the scorecard 
     */
     load_scorecard(score_info){ //score info IS gameObject...
+        //javascript error: score_info is not iterable
+
         document.getElementById("rolls_remaining").innerHTML = score_info.rolls_remaining;
 
-        for (let category of score_info.upper.keys()) {
-            if (score_info.upper[category] == -1) {
-                document.getElementById(category + 'input').classList.remove("disabled")
+        for (let category of this.upper_categories) {
+            if (score_info["upper"][category] == -1) {
+                document.getElementById(category + '_input').removeAttribute("disabled")
             } else {
-                document.getElementById(category + 'input').value = score_info.upper[category];
-                document.getElementById(category + 'input').classList.add("disabled")
+                document.getElementById(category + '_input').value = score_info["upper"][category];
+                document.getElementById(category + '_input').setAttribute("disabled", "")
             }
         }
 
-        for (let category of score_info.lower.keys()) {
-            if (score_info.lower[category] == -1) {
-                document.getElementById(category + 'input').classList.remove("disabled")
+        for (let category of this.lower_categories) {
+            if (score_info["lower"][category] == -1) {
+                document.getElementById(category + '_input').removeAttribute("disabled")
             } else {
-                document.getElementById(category + 'input').value = score_info.lower[category];
-                document.getElementById(category + 'input').classList.add("disabled")
+                document.getElementById(category + '_input').value = score_info["lower"][category];
+                document.getElementById(category + '_input').setAttribute("disabled", "")
             }
         }
     }
@@ -254,23 +259,39 @@ class Gamecard{
      *
      */
     to_object(){
-        let scorecard = {
-            rolls_remaining: 0,
-            upper: {},
-            lower: {}
+        let scorecard = { //-1 is no value yet
+            "rolls_remaining": 3,
+            "upper": {
+                "one":-1,
+                "two":-1,
+                "three":-1,
+                "four":-1,
+                "five":-1,
+                "six":-1
+            },
+            "lower": {
+                "three_of_a_kind":-1,
+                "four_of_a_kind":-1,
+                "full_house":-1,
+                "small_straight":-1,
+                "large_straight":-1,
+                "yahtzee":-1,
+                "chance":-1
+            }
         }
-
-        let upper_categories = ["one","two","three","four","five","six"];
-        for (let category of upper_categories) {
-
-            scorecard.upper[category] = -1;
+        if (document.getElementById("rolls_remaining").innerHTML != null) {
+            scorecard["rolls_remaining"] = Number(document.getElementById("rolls_remaining").innerHTML);
         }
-
-        let lower_categories = ["three_of_a_kind","four_of_a_kind","full_house","small_straight","large_straight","yahtzee","chance"];
-        for (let category of lower_categories) {
-            scorecard.lower[category] = -1;
+        for (let upper of this.upper_categories) {
+            if (Number.isInteger(document.getElementById(upper + "_input").value)) {
+                scorecard["upper"][upper] = Number(document.getElementById(upper + "_input").value);
+            }
         }
-
+        for (let lower of this.lower_categories) {
+            if (Number.isInteger(document.getElementById(lower + "_input").value)) {
+                scorecard["lower"][lower] = Number(document.getElementById(lower + "_input").value);
+            }
+        }
         return scorecard;
     }
 }
