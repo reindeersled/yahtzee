@@ -149,6 +149,7 @@ class Gamecard{
     * @return {Number} an integer value representing the current game score
     */
     get_score(){
+        this.update_scores();
         return parseInt(document.getElementById("grand_total").innerText);
     }
 
@@ -170,16 +171,16 @@ class Gamecard{
                 }
             }
        }
-       document.getElementById("upper_score").innerHTML = upper_sum;
+       document.getElementById("upper_score").innerText = upper_sum;
        if (upper_sum > 63) {
             bonus = 35;
-            document.getElementById("upper_bonus").innerHTML = 35;
+            document.getElementById("upper_bonus").innerText = 35;
        }
-       document.getElementById("upper_total").innerHTML = upper_sum + bonus;
+       document.getElementById("upper_total").innerText = upper_sum + bonus;
 
-       document.getElementById("lower_score").innerHTML = lower_sum;
-       document.getElementById("upper_total_lower").innerHTML = upper_sum + bonus;
-       document.getElementById("grand_total").innerHTML = upper_sum + lower_sum + bonus;
+       document.getElementById("lower_score").innerText = lower_sum;
+       document.getElementById("upper_total_lower").innerText = upper_sum + bonus;
+       document.getElementById("grand_total").innerText = upper_sum + lower_sum + bonus;
        
     }
 
@@ -208,26 +209,27 @@ class Gamecard{
      *
      * @param {Object} score_info the object version of the scorecard 
     */
-    load_scorecard(score_info){ //score info IS gameObject...
-        //javascript error: score_info is not iterable
+    load_scorecard(score_info){ 
 
-        document.getElementById("rolls_remaining").innerHTML = score_info.rolls_remaining;
+        document.getElementById("rolls_remaining").innerText = score_info["rolls_remaining"];
 
-        for (let category of this.upper_categories) {
-            if (score_info["upper"][category] == -1) {
-                document.getElementById(category + '_input').removeAttribute("disabled")
+        for (let upper of this.upper_categories) {
+            if (score_info["upper"][upper] == -1) {
+                document.getElementById(upper + '_input').removeAttribute("disabled")
+                document.getElementById(upper + '_input').value = -1;
             } else {
-                document.getElementById(category + '_input').value = score_info["upper"][category];
-                document.getElementById(category + '_input').setAttribute("disabled", "")
+                document.getElementById(upper + '_input').value = score_info["upper"][upper];
+                document.getElementById(upper + '_input').setAttribute("disabled", "")
             }
         }
 
-        for (let category of this.lower_categories) {
-            if (score_info["lower"][category] == -1) {
-                document.getElementById(category + '_input').removeAttribute("disabled")
+        for (let lower of this.lower_categories) {
+            if (score_info["lower"][lower] == -1) {
+                document.getElementById(lower + '_input').removeAttribute("disabled")
+                document.getElementById(lower + '_input').value = -1;
             } else {
-                document.getElementById(category + '_input').value = score_info["lower"][category];
-                document.getElementById(category + '_input').setAttribute("disabled", "")
+                document.getElementById(lower + '_input').value = score_info["lower"][lower];
+                document.getElementById(lower + '_input').setAttribute("disabled", "")
             }
         }
     }
@@ -279,16 +281,17 @@ class Gamecard{
                 "chance":-1
             }
         }
-        if (document.getElementById("rolls_remaining").innerHTML != null) {
-            scorecard["rolls_remaining"] = Number(document.getElementById("rolls_remaining").innerHTML);
-        }
+        this.update_scores();
+
+        scorecard["rolls_remaining"] = parseInt(document.getElementById("rolls_remaining").innerText);
+
         for (let upper of this.upper_categories) {
-            if (Number.isInteger(document.getElementById(upper + "_input").value)) {
+            if (document.getElementById(upper + "_input").hasAttribute("disabled")) {
                 scorecard["upper"][upper] = Number(document.getElementById(upper + "_input").value);
             }
         }
         for (let lower of this.lower_categories) {
-            if (Number.isInteger(document.getElementById(lower + "_input").value)) {
+            if (document.getElementById(lower + "_input").hasAttribute("disabled")) {
                 scorecard["lower"][lower] = Number(document.getElementById(lower + "_input").value);
             }
         }

@@ -138,210 +138,210 @@ class MS2_Gamecard_Tests(unittest.TestCase):
         self.browser = webdriver.Chrome()
         self.addCleanup(self.browser.quit)
     
-    # def test_load_full_scorecard(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_finished
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     all_scorecard_values =  get_current_category_values(self.browser, self.upper_categories, self.lower_categories)
+    def test_load_full_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_finished
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        all_scorecard_values =  get_current_category_values(self.browser, self.upper_categories, self.lower_categories)
     
-    #     for upper_category in self.upper_categories:
-    #         self.assertEqual(all_scorecard_values[upper_category], scorecard_info["upper"][upper_category])
-    #     for lower_category in self.lower_categories:
-    #         self.assertEqual(all_scorecard_values[lower_category], scorecard_info["lower"][lower_category])
+        for upper_category in self.upper_categories:
+            self.assertEqual(all_scorecard_values[upper_category], scorecard_info["upper"][upper_category])
+        for lower_category in self.lower_categories:
+            self.assertEqual(all_scorecard_values[lower_category], scorecard_info["lower"][lower_category])
 
-    #     self.assertEqual(all_scorecard_values["rolls_remaining"], scorecard_info["rolls_remaining"])
+        self.assertEqual(all_scorecard_values["rolls_remaining"], scorecard_info["rolls_remaining"])
 
-    # def test_load_partial_bonus_scorecard(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_partial_bonus
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     all_scorecard_values =  get_current_category_values(self.browser, self.upper_categories, self.lower_categories)
-    #     for upper_category in self.upper_categories:
-    #         self.assertEqual(all_scorecard_values[upper_category], scorecard_info["upper"][upper_category])
-    #     for lower_category in self.lower_categories:
-    #         self.assertEqual(all_scorecard_values[lower_category], scorecard_info["lower"][lower_category])
+    def test_load_partial_bonus_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_partial_bonus
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        all_scorecard_values =  get_current_category_values(self.browser, self.upper_categories, self.lower_categories)
+        for upper_category in self.upper_categories:
+            self.assertEqual(all_scorecard_values[upper_category], scorecard_info["upper"][upper_category])
+        for lower_category in self.lower_categories:
+            self.assertEqual(all_scorecard_values[lower_category], scorecard_info["lower"][lower_category])
 
-    #     self.assertEqual(all_scorecard_values["rolls_remaining"], scorecard_info["rolls_remaining"])
+        self.assertEqual(all_scorecard_values["rolls_remaining"], scorecard_info["rolls_remaining"])
     
-    # def test_load_empty_scorecard(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_empty
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     all_scorecard_values =  get_current_category_values(self.browser, self.upper_categories, self.lower_categories)
+    def test_load_empty_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_empty
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        all_scorecard_values =  get_current_category_values(self.browser, self.upper_categories, self.lower_categories)
     
-    #     for upper_category in self.upper_categories:
-    #         self.assertEqual(all_scorecard_values[upper_category], scorecard_info["upper"][upper_category])
-    #     for lower_category in self.lower_categories:
-    #         self.assertEqual(all_scorecard_values[lower_category], scorecard_info["lower"][lower_category])
+        for upper_category in self.upper_categories:
+            self.assertEqual(all_scorecard_values[upper_category], scorecard_info["upper"][upper_category])
+        for lower_category in self.lower_categories:
+            self.assertEqual(all_scorecard_values[lower_category], scorecard_info["lower"][lower_category])
 
-    #     self.assertEqual(all_scorecard_values["rolls_remaining"], scorecard_info["rolls_remaining"])
+        self.assertEqual(all_scorecard_values["rolls_remaining"], scorecard_info["rolls_remaining"])
     
-    # def test_load_multiple_scorecards(self): #FAILED IDK
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_finished
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     scorecard_info = self.score_info_partial #should erase the previous scorecard
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     all_scorecard_values =  get_current_category_values(self.browser, self.upper_categories, self.lower_categories)
+    def test_load_multiple_scorecards(self): #OK
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_finished
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        scorecard_info = self.score_info_partial #should erase the previous scorecard
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        all_scorecard_values =  get_current_category_values(self.browser, self.upper_categories, self.lower_categories)
     
-    #     for upper_category in self.upper_categories:
-    #         self.assertEqual(all_scorecard_values[upper_category], scorecard_info["upper"][upper_category])
-    #     for lower_category in self.lower_categories:
-    #         self.assertEqual(all_scorecard_values[lower_category], scorecard_info["lower"][lower_category])
+        for upper_category in self.upper_categories:
+            self.assertEqual(all_scorecard_values[upper_category], scorecard_info["upper"][upper_category])
+        for lower_category in self.lower_categories:
+            self.assertEqual(all_scorecard_values[lower_category], scorecard_info["lower"][lower_category])
 
-    #     self.assertEqual(all_scorecard_values["rolls_remaining"], scorecard_info["rolls_remaining"])
+        self.assertEqual(all_scorecard_values["rolls_remaining"], scorecard_info["rolls_remaining"])
     
-    #idf get it... sometimes 0 is empty othertimes its -1 idfgi
-    # def test_to_object_full_scorecard(self): #FAILED
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_finished
-    #     self.maxDiff = None
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     scorecard_object = self.browser.execute_script(f"return window.gamecard.to_object();")
-    #     self.assertEqual(scorecard_object, scorecard_info)
+    def test_to_object_full_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_finished
+        self.maxDiff = None
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        scorecard_object = self.browser.execute_script(f"return window.gamecard.to_object();")
+        self.assertEqual(scorecard_object, scorecard_info)
 
-    # def test_to_object_partial_scorecard(self): #FAILED
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_partial_bonus
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     scorecard_object = self.browser.execute_script(f"return window.gamecard.to_object();")
-    #     self.assertEqual(scorecard_object, scorecard_info)
+    def test_to_object_partial_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_partial_bonus
+        self.maxDiff = None
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        scorecard_object = self.browser.execute_script(f"return window.gamecard.to_object();")
+        self.assertEqual(scorecard_object, scorecard_info)
     
-    # def test_to_object_empty_scorecard(self):  #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_empty
-    #     self.maxDiff = None
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     scorecard_object = self.browser.execute_script(f"return window.gamecard.to_object();")
-    #     self.assertEqual(scorecard_object, scorecard_info)
+    def test_to_object_empty_scorecard(self):  #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_empty
+        self.maxDiff = None
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        scorecard_object = self.browser.execute_script(f"return window.gamecard.to_object();")
+        self.assertEqual(scorecard_object, scorecard_info)
    
-    # def test_to_object_extra_scores(self): #FAILED
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_partial_bonus
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     category = self.browser.find_element(By.ID, f"three_of_a_kind_input")
+    def test_to_object_extra_scores(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_partial_bonus
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        category = self.browser.find_element(By.ID, f"three_of_a_kind_input")
 
-    #     #Fill in empty categories but don't hit ENTER
-    #     category.send_keys("30") #not entered, just contains text 
-    #     category = self.browser.find_element(By.ID, f"full_house_input")
-    #     category.send_keys("25") #not entered, just contains text
+        #Fill in empty categories but don't hit ENTER
+        category.send_keys("30") #not entered, just contains text 
+        category = self.browser.find_element(By.ID, f"full_house_input")
+        category.send_keys("25") #not entered, just contains text
 
-    #     scorecard_object = self.browser.execute_script(f"return window.gamecard.to_object();")
-    #     self.assertEqual(scorecard_object, scorecard_info)
+        scorecard_object = self.browser.execute_script(f"return window.gamecard.to_object();")
+        self.assertEqual(scorecard_object, scorecard_info)
     
-    # def test_is_finished_full_scorecard(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_finished
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     is_finished = self.browser.execute_script(f"return window.gamecard.is_finished();")
-    #     self.assertTrue(is_finished)    
+    def test_is_finished_full_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_finished
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        is_finished = self.browser.execute_script(f"return window.gamecard.is_finished();")
+        self.assertTrue(is_finished)    
     
-    # def test_is_finished_partial_scorecard(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_partial
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     is_finished = self.browser.execute_script(f"return window.gamecard.is_finished();")
-    #     self.assertFalse(is_finished)
+    def test_is_finished_partial_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_partial
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        is_finished = self.browser.execute_script(f"return window.gamecard.is_finished();")
+        self.assertFalse(is_finished)
     
-    # def test_get_score_full_scorecard(self): #FAILED
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_finished
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     score = self.browser.execute_script(f"return window.gamecard.get_score();")
-    #     self.assertEqual(score, 288)
+    def test_get_score_full_scorecard(self): #OK
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_finished
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        score = self.browser.execute_script(f"return window.gamecard.get_score();")
+        self.assertEqual(score, 288)
     
-    # def test_get_score_full_scorecard_no_bonus(self): #FAILED
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_finished_no_bonus
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     score = self.browser.execute_script(f"return window.gamecard.get_score();")
-    #     self.assertEqual(score, 204)
+    def test_get_score_full_scorecard_no_bonus(self): #OK
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_finished_no_bonus
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        score = self.browser.execute_script(f"return window.gamecard.get_score();")
+        self.assertEqual(score, 204)
 
-    # def test_get_score_partial_scorecard(self): #FAILED
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_partial_bonus
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     score = self.browser.execute_script(f"return window.gamecard.get_score();")
-    #     self.assertEqual(score, 193)
+    def test_get_score_partial_scorecard(self): #OK
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_partial_bonus
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        score = self.browser.execute_script(f"return window.gamecard.get_score();")
+        self.assertEqual(score, 193)
     
-    # def test_get_score_partial_scorecard_no_bonus(self): #FAILED
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_partial
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     score = self.browser.execute_script(f"return window.gamecard.get_score();")
-    #     self.assertEqual(score, 110)
+    def test_get_score_partial_scorecard_no_bonus(self): #OK
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_partial
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        score = self.browser.execute_script(f"return window.gamecard.get_score();")
+        self.assertEqual(score, 110)
     
-    # def test_get_score_empty_scorecard(self): #FAILED
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_empty
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     score = self.browser.execute_script(f"return window.gamecard.get_score();")
-    #     self.assertEqual(score, 0)
+    def test_get_score_empty_scorecard(self): #OK
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_empty
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        score = self.browser.execute_script(f"return window.gamecard.get_score();")
+        self.assertEqual(score, 0)
     
-    # def test_update_scores_full_scorecard(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_finished
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     self.browser.execute_script(f"window.gamecard.update_scores();")
-    #     score_values = get_current_score_values(self.browser, self.score_elements)
-    #     self.assertEqual(score_values["upper_score"], 84)
-    #     self.assertEqual(score_values["upper_bonus"], 35)
-    #     self.assertEqual(score_values["upper_total"], 119)
-    #     self.assertEqual(score_values["upper_total_lower"], 119)
-    #     self.assertEqual(score_values["lower_score"], 169)
-    #     self.assertEqual(score_values["grand_total"], 288)
+    def test_update_scores_full_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_finished
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        self.browser.execute_script(f"window.gamecard.update_scores();")
+        score_values = get_current_score_values(self.browser, self.score_elements)
+        self.assertEqual(score_values["upper_score"], 84)
+        self.assertEqual(score_values["upper_bonus"], 35)
+        self.assertEqual(score_values["upper_total"], 119)
+        self.assertEqual(score_values["upper_total_lower"], 119)
+        self.assertEqual(score_values["lower_score"], 169)
+        self.assertEqual(score_values["grand_total"], 288)
     
-    # def test_update_scores_full_scorecard_no_bonus(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_finished_no_bonus
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     self.browser.execute_script(f"window.gamecard.update_scores();")
-    #     score_values = get_current_score_values(self.browser, self.score_elements)
-    #     self.assertEqual(score_values["upper_score"], 60)
-    #     self.assertEqual(score_values["upper_bonus"], None)
-    #     self.assertEqual(score_values["upper_total"], 60)
-    #     self.assertEqual(score_values["upper_total_lower"], 60)
-    #     self.assertEqual(score_values["lower_score"], 144)
-    #     self.assertEqual(score_values["grand_total"], 204)
+    def test_update_scores_full_scorecard_no_bonus(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_finished_no_bonus
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        self.browser.execute_script(f"window.gamecard.update_scores();")
+        score_values = get_current_score_values(self.browser, self.score_elements)
+        self.assertEqual(score_values["upper_score"], 60)
+        self.assertEqual(score_values["upper_bonus"], None)
+        self.assertEqual(score_values["upper_total"], 60)
+        self.assertEqual(score_values["upper_total_lower"], 60)
+        self.assertEqual(score_values["lower_score"], 144)
+        self.assertEqual(score_values["grand_total"], 204)
 
-    # def test_update_scores_partial_scorecard(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_partial_bonus
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     self.browser.execute_script(f"window.gamecard.update_scores();")
-    #     score_values = get_current_score_values(self.browser, self.score_elements)
-    #     self.assertEqual(score_values["upper_score"], 84)
-    #     self.assertEqual(score_values["upper_bonus"], 35)
-    #     self.assertEqual(score_values["upper_total"], 119)
-    #     self.assertEqual(score_values["upper_total_lower"], 119)
-    #     self.assertEqual(score_values["lower_score"], 74)
-    #     self.assertEqual(score_values["grand_total"], 193)
+    def test_update_scores_partial_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_partial_bonus
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        self.browser.execute_script(f"window.gamecard.update_scores();")
+        score_values = get_current_score_values(self.browser, self.score_elements)
+        self.assertEqual(score_values["upper_score"], 84)
+        self.assertEqual(score_values["upper_bonus"], 35)
+        self.assertEqual(score_values["upper_total"], 119)
+        self.assertEqual(score_values["upper_total_lower"], 119)
+        self.assertEqual(score_values["lower_score"], 74)
+        self.assertEqual(score_values["grand_total"], 193)
     
-    # def test_update_scores_partial_scorecard_no_bonus(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_partial
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     self.browser.execute_script(f"window.gamecard.update_scores();")
-    #     score_values = get_current_score_values(self.browser, self.score_elements)
-    #     self.assertEqual(score_values["upper_score"], 36)
-    #     self.assertEqual(score_values["upper_bonus"], None)
-    #     self.assertEqual(score_values["upper_total"], 36)
-    #     self.assertEqual(score_values["upper_total_lower"], 36)
-    #     self.assertEqual(score_values["lower_score"], 74)
-    #     self.assertEqual(score_values["grand_total"], 110)
+    def test_update_scores_partial_scorecard_no_bonus(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_partial
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        self.browser.execute_script(f"window.gamecard.update_scores();")
+        score_values = get_current_score_values(self.browser, self.score_elements)
+        self.assertEqual(score_values["upper_score"], 36)
+        self.assertEqual(score_values["upper_bonus"], None)
+        self.assertEqual(score_values["upper_total"], 36)
+        self.assertEqual(score_values["upper_total_lower"], 36)
+        self.assertEqual(score_values["lower_score"], 74)
+        self.assertEqual(score_values["grand_total"], 110)
     
-    # def test_update_scores_empty_scorecard(self): #DONE
-    #     self.browser.get(self.url)
-    #     scorecard_info = self.score_info_empty
-    #     self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
-    #     self.browser.execute_script(f"window.gamecard.update_scores();")
-    #     score_values = get_current_score_values(self.browser, self.score_elements)
-    #     self.assertEqual(score_values["upper_score"], 0)
-    #     self.assertEqual(score_values["upper_bonus"], None)
-    #     self.assertEqual(score_values["upper_total"], 0)
-    #     self.assertEqual(score_values["upper_total_lower"], 0)
-    #     self.assertEqual(score_values["lower_score"], 0)
-    #     self.assertEqual(score_values["grand_total"], 0)
+    def test_update_scores_empty_scorecard(self): #DONE
+        self.browser.get(self.url)
+        scorecard_info = self.score_info_empty
+        self.browser.execute_script(f"window.gamecard.load_scorecard(JSON.parse('{json.dumps(scorecard_info)}'));")
+        self.browser.execute_script(f"window.gamecard.update_scores();")
+        score_values = get_current_score_values(self.browser, self.score_elements)
+        self.assertEqual(score_values["upper_score"], 0)
+        self.assertEqual(score_values["upper_bonus"], None)
+        self.assertEqual(score_values["upper_total"], 0)
+        self.assertEqual(score_values["upper_total_lower"], 0)
+        self.assertEqual(score_values["lower_score"], 0)
+        self.assertEqual(score_values["grand_total"], 0)
     
 if __name__ == '__main__':
     unittest.main()
