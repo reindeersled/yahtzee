@@ -55,6 +55,21 @@ function roll_dice_handler(){
 function enter_score_handler(event){
     console.log("Score entry attempted for: ", event.target.id);
     
+    let category = event.target.id.replace("_input", "");
+
+    if (gamecard.is_valid_score(category, event.target.value)) {
+
+        console.log("Score entered")
+        gamecard.update_scores()
+
+        if (gamecard.is_finished()){
+            gamecard.to_object();
+            console.log("Done!")
+        } 
+        
+    } else {
+        display_feedback("Invalid score, tried to enter " + event.target.value, event.target.id);
+    }
 }
 
 //------Feedback ---------//
