@@ -31,12 +31,6 @@ let score_elements = Array.from(document.getElementsByClassName("score"));
 let gamecard = new Gamecard(category_elements, score_elements, dice);
 window.gamecard = gamecard; //useful for testing to add a reference to global window object
 
-console.log(category_elements, 
-    score_elements, 
-    dice);
-
-
-
 
 //---------Event Handlers-------//
 function reserve_die_handler(event){
@@ -44,31 +38,30 @@ function reserve_die_handler(event){
 }
 
 function roll_dice_handler(){
-    display_feedback("Rolling the dice...", "good");
-    dice.roll()
-
-    console.log("Dice values:", dice.get_values());
-    console.log("Sum of all dice:", dice.get_sum());
-    console.log("Count of all dice faces:", dice.get_counts());
+    if (dice.get_rolls_remaining() < 1) {
+        console.log("You have no more rolls!");
+    } else {
+        display_feedback("Rolling the dice...", "good");
+        dice.roll();
+    }
 }
 
 function enter_score_handler(event){
     console.log("Score entry attempted for: ", event.target.id);
-    
     let category = event.target.id.replace("_input", "");
 
-    if (gamecard.is_valid_score(category, event.target.value)) {
+    if (gamecard.is_valid_score(category, Number(parseInt(event.target.value)))) {
+        console.log("Score entered!")
+        gamecard.update_scores();
 
-        console.log("Score entered")
-        gamecard.update_scores()
+        dice.reset();
 
-        if (gamecard.is_finished()){
-            gamecard.to_object();
-            console.log("Done!")
-        } 
-        
+        if (gamecard.is_finished()) {
+            console.log("Congratulations! Your score was " + gamecard.get_score());
+        }
+
     } else {
-        display_feedback("Invalid score, tried to enter " + event.target.value, event.target.id);
+        console.log("Invalid score!")
     }
 }
 

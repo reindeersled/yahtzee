@@ -49,6 +49,11 @@ class Gamecard{
             return false;
         }
 
+        if (value == 0) {
+            html.setAttribute("disabled", "");
+            return true
+        }
+
         if (html.className.includes("upper")) { //for upper category
             let sum = 0;
             let digit = 0;
@@ -79,62 +84,62 @@ class Gamecard{
 
             if (html.id.includes("three")) {
                 if (dice_counts.indexOf(3) != -1 || dice_counts.indexOf(4) != -1 || dice_counts.indexOf(5) != -1) {
-                    if (value == dice_sum || value == 0) {
+                    if (value == dice_sum) {
                         html.setAttribute("disabled", "");
                         return true;
                     }
                 }
-                return value == 0;
+                return false;
             }
             if (html.id.includes("four")) {
                 if (dice_counts.indexOf(4) != -1 || dice_counts.indexOf(5) != -1) {
-                    if (value == dice_sum || value == 0) {
+                    if (value == dice_sum) {
                         html.setAttribute("disabled", "");
                         return true;
                     }
                 }
-                return value == 0;
+                return false;
             }
             if (html.id.includes("full_house")) {
                 if (dice_counts.includes(3) && dice_counts.includes(2)) {
-                    if (value == 25 || value == 0) {
+                    if (value == 25) {
                         html.setAttribute("disabled", "");
                         return true;
                     }
                 }
-                return value == 0;
+                return false;
             }
             if (html.id.includes("small")) {
                 for (let i=0;i<dice_counts.length-2;i++) {
                     if (dice_counts[i] > 0 && dice_counts[i+1] > 0 && dice_counts[i+2] > 0) {
-                        if (value == 30 || value == 0) {
+                        if (value == 30) {
                             html.setAttribute("disabled", "");
                             return true;
                         }
                     }
                 }
-                return value == 0;
+                return false;
             }
             if (html.id.includes("large")) { //can't do == with arrays in javascript
                 if (dice_counts.toString().includes('1,1,1,1,1')) {
-                    if (value == 40 || value == 0) {
+                    if (value == 40) {
                         html.setAttribute("disabled", "");
                         return true;
                     }
                 } 
-                return value == 0;
+                return false;
             }
             if (html.id.includes("yahtzee")) {
                 if (dice_counts.indexOf(5) != -1) {
-                    if (value == 50 || value == 0) {
+                    if (value == 50) {
                         html.setAttribute("disabled", "");
                         return true;
                     }
                 }
-                return value == 0;
+                return false;
             }
             if (html.id.includes("chance")) {
-                if (value == dice_sum || value == 0) {
+                if (value == dice_sum) {
                     html.setAttribute("disabled", "");
                     return true;
                 }

@@ -19,7 +19,7 @@ class MS2_UI_Tests(unittest.TestCase):
         self.browser = webdriver.Chrome()
         self.addCleanup(self.browser.quit)
 
-    def test_save_load_button_UI(self): 
+    def test_save_load_button_UI(self): #OK
         self.browser.get(self.url)
         ids=["save_game", "load_game"]
         for id in ids:
@@ -30,7 +30,7 @@ class MS2_UI_Tests(unittest.TestCase):
             
         print("test_save_load_button_UI passed")
     
-    def test_upper_categories_UI(self): 
+    def test_upper_categories_UI(self): #OK
         
         for id in self.upper_categories:
             self.browser.get(self.url)
@@ -55,7 +55,7 @@ class MS2_UI_Tests(unittest.TestCase):
             
         print("test_upper_categories_UI passed")
 
-    def test_lower_categories_UI(self): 
+    def test_lower_categories_UI(self): #OK
         for id in self.lower_categories:
             self.browser.get(self.url)
             try:
@@ -74,12 +74,11 @@ class MS2_UI_Tests(unittest.TestCase):
             self.assertTrue(category.is_enabled())
 
             category.send_keys("0"+Keys.RETURN)
-
             self.assertFalse(category.is_enabled())
         
         print("test_lower_categories_UI passed")
     
-    def test_score_elements_UI(self): 
+    def test_score_elements_UI(self): #OK
         self.browser.get(self.url)
         for id in self.score_elements:
             try:
@@ -90,7 +89,7 @@ class MS2_UI_Tests(unittest.TestCase):
         
         print("test_score_elements_UI passed")
     
-    def test_upper_categories_validation(self):
+    def test_upper_categories_validation(self): #OK
         upper_tests={
             "one" : [
                 [0, [6, 2, 3, 4, 5], True],
@@ -188,7 +187,7 @@ class MS2_UI_Tests(unittest.TestCase):
                 #self.browser.save_screenshot(f"{category}_input_after_enter.png")
                 self.assertEqual(category_input.is_enabled(), not test[2])
     
-    def test_lower_categories_validation(self):
+    def test_lower_categories_validation(self): #OK
         lower_tests={
             "three_of_a_kind":[
                 [7,[1, 1, 1, 2, 2],True],
