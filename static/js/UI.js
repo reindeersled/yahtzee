@@ -2,9 +2,17 @@ console.log("UI.js connected")
 import Dice from './Dice.js';
 import Gamecard from './Gamecard.js';
 
+display_feedback("Started a new game!", "good")
+
 //-------Dice Setup--------//
 let roll_button = document.getElementById('roll_button'); 
 roll_button.addEventListener('click', roll_dice_handler);
+
+let save_button = document.getElementById('save_game'); 
+save_button.addEventListener('click', save_game);
+
+let load_button = document.getElementById('load_game'); 
+load_button.addEventListener('click', load_game);
 
 let dice_elements =[];
 for (let i = 0; i<5; i++){
@@ -38,8 +46,9 @@ function reserve_die_handler(event){
 }
 
 function roll_dice_handler(){
+    console.clear();
     if (dice.get_rolls_remaining() < 1) {
-        console.log("You have no more rolls!");
+        display_feedback("You have no more rolls!", "bad")
     } else {
         display_feedback("Rolling the dice...", "good");
         dice.roll();
@@ -49,20 +58,42 @@ function roll_dice_handler(){
 function enter_score_handler(event){
     console.log("Score entry attempted for: ", event.target.id);
     let category = event.target.id.replace("_input", "");
+    
+    let dice_values = dice.get_values();
+    if (dice_values.includes(0)) {
+        display_feedback("You haven't rolled your dice!", "bad")
+    }
+
 
     if (gamecard.is_valid_score(category, Number(parseInt(event.target.value)))) {
-        console.log("Score entered!")
+        display_feedback("Score successfully entered!", "good")
         gamecard.update_scores();
 
         dice.reset();
 
         if (gamecard.is_finished()) {
-            console.log("Congratulations! Your score was " + gamecard.get_score());
+            display_feedback("Game completed!", "good")
         }
 
     } else {
-        console.log("Invalid score!")
+        display_feedback("Invalid score!", "bad")
     }
+}
+
+function load_game() {
+    console.log(localStorage.getItem('yahtzee'));
+    if (!localStorage.getItem('yahtzee')) {
+        display_feedback("Game doesn't exist!", "bad")
+    } else {
+        let old_game = localStorage.getItem('yahtzee') //string
+        gamecard.load_scorecard(JSON.parse(old_game));
+        display_feedback("Game loaded!", "good")
+    }
+}
+
+function save_game() {
+    localStorage.setItem('yahtzee', JSON.stringify(gamecard.to_object()));
+    display_feedback("Game saved!", "good")
 }
 
 //------Feedback ---------//
