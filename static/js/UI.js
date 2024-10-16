@@ -50,33 +50,30 @@ function roll_dice_handler(){
     if (dice.get_rolls_remaining() < 1) {
         display_feedback("You have no more rolls!", "bad")
     } else {
-        display_feedback("Rolling the dice...", "good");
         dice.roll();
     }
 }
 
 function enter_score_handler(event){
-    console.log("Score entry attempted for: ", event.target.id);
     let category = event.target.id.replace("_input", "");
     
     let dice_values = dice.get_values();
     if (dice_values.includes(0)) {
         display_feedback("You haven't rolled your dice!", "bad")
-    }
-
-
-    if (gamecard.is_valid_score(category, Number(parseInt(event.target.value)))) {
-        display_feedback("Score successfully entered!", "good")
-        gamecard.update_scores();
-
-        dice.reset();
-
-        if (gamecard.is_finished()) {
-            display_feedback("Game completed!", "good")
-        }
-
     } else {
-        display_feedback("Invalid score!", "bad")
+        if (gamecard.is_valid_score(category, Number(parseInt(event.target.value)))) {
+            display_feedback("Score successfully entered!", "good")
+            gamecard.update_scores();
+    
+            dice.reset();
+    
+            if (gamecard.is_finished()) {
+                display_feedback("Game completed!", "good")
+            }
+    
+        } else {
+            display_feedback("Invalid score!", "bad")
+        }
     }
 }
 
