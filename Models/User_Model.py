@@ -1,3 +1,4 @@
+#Reina Lin
 import sqlite3
 import random
 
