@@ -29,7 +29,7 @@ class Feedback_UI_Tests(unittest.TestCase):
         feedback_element = self.browser.find_element(By.ID, "feedback")
         self.assertTrue("bad" in feedback_element.get_attribute("class")) #feedback element should be styled "bad"
         self.assertFalse("good" in feedback_element.get_attribute("class")) #feedback element should not be styled "good"
-        self.assertTrue( len(feedback_element.text) > 10) #checks for significant feedback        
+        self.assertTrue( len(feedback_element.text) > 10) #checks for significant feedback
             
         print("test_load_nonexistent_game_bad passed")
     

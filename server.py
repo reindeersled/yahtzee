@@ -17,6 +17,16 @@ def about():
     
     return render_template('/game.html', username=username)
 
+@app.route('/user_games')
+def user_games():
+    username = request.args.get('username')
+    return render_template('/user_games.html',username=username)
+
+@app.route('/user_details')
+def user_details():
+    username = request.args.get('username')
+    return render_template('user_details.html',username=username)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     app.run(debug=True, port=port)

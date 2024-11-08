@@ -47,6 +47,8 @@ function reserve_die_handler(event){
 
 function roll_dice_handler(){
     console.clear();
+    document.getElementById('feedback').className = '';
+    document.getElementById('feedback').innerHTML = '';
     if (dice.get_rolls_remaining() < 1) {
         display_feedback("You have no more rolls!", "bad")
     } else {
@@ -80,9 +82,9 @@ function enter_score_handler(event){
 function load_game() {
     console.log(localStorage.getItem('yahtzee'));
     if (!localStorage.getItem('yahtzee')) {
-        display_feedback("Game doesn't exist!", "bad")
+        display_feedback("Game doesn't exist!", "bad");
     } else {
-        let old_game = localStorage.getItem('yahtzee') //string
+        let old_game = localStorage.getItem('yahtzee'); //string
         gamecard.load_scorecard(JSON.parse(old_game));
         display_feedback("Game loaded!", "good")
     }
@@ -95,6 +97,8 @@ function save_game() {
 
 //------Feedback ---------//
 function display_feedback(message, context){
+    let feedbackElement = document.getElementById('feedback');
+    feedbackElement.className = context; 
+    feedbackElement.innerHTML = message;
     console.log(context, "Feedback: ", message);
-
 }
