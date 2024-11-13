@@ -208,7 +208,7 @@ class Game_Model_Tests(unittest.TestCase):
         
         print("test_game_exists_DNE passed!") 
     
-    def test_get_game_exists(self):
+    def test_get_game_exists_id(self):
         method = "games.get"
         #setup - Create 4 games
         original_games = {}
@@ -217,17 +217,33 @@ class Game_Model_Tests(unittest.TestCase):
             original_games[game['data']["name"]] = game["data"] #game name maps to game object
        
         for game in self.games:
-            returned_game = self.GameModel.get(game["name"])
+            returned_game = self.GameModel.get(id = original_games[game["name"]]["id"])
+            game_name = returned_game['data']['name']
+            ensure_data_packet_formatting(self, returned_game, method, "success")
+            self.assertEqual(returned_game["data"], original_games[game_name])
+        
+        print("test_get_game_exists_id passed!") 
+
+    def test_get_game_exists_game_name(self):
+        method = "games.get"
+        #setup - Create 4 games
+        original_games = {}
+        for i in range(len(self.games)):
+            game = self.GameModel.create(self.games[i])
+            original_games[game['data']["name"]] = game["data"] #game name maps to game object
+       
+        for game in self.games:
+            returned_game = self.GameModel.get(game_name = game["name"])
             game_name = returned_game['data']['name']
             ensure_data_packet_formatting(self, returned_game, method, "success")
             self.assertEqual(returned_game["data"],original_games[game_name])
         
-        print("test_get_game_exists passed!") 
-       
+        print("test_get_game_exists_name passed!") 
+
     def test_get_game_DNE(self):
         method = "games.get"
         for game in self.games:
-            returned_game = self.GameModel.get(game["name"])
+            returned_game = self.GameModel.get(game_name=game["name"])
             ensure_data_packet_formatting(self, returned_game, method, "error")
         print("test_get_game_DNE passed!") 
 

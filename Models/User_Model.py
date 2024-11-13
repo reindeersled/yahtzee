@@ -67,7 +67,6 @@ class User:
             cursor = db_connection.cursor()
             user_id = random.randint(0, self.max_safe_id)
 
-            # TODO: check to see if id already exists!!
             if self.exists(id=user_id)["data"] == True:
                 return {"status": "error",
                         "data": "id already exists"
@@ -90,6 +89,11 @@ class User:
             if "@" not in user_info["email"] or "." not in user_info["email"]:
                 return {"status": "error",
                         "data": "bad email, probably invalid"} 
+            
+            for letter in user_info["email"]:
+                if letter.isalpha() == False and letter != '@' and letter != '.' and letter.is_integer() == False:
+                    return {"status": "error",
+                            "data": "bad email, also probably invalid"} 
             
             user_data = (user_id, user_info["email"], user_info["username"], user_info["password"])
 
@@ -176,6 +180,13 @@ class User:
             if self.exists(id=user_info["id"])["data"] == False:
                 return {"status":"error",
                         "data": "this id doesn't exist!"}
+            
+            #return error if someone already has that username
+            cursor.execute(f"SELECT * FROM {self.table_name} WHERE username = ?;", (user_info["username"],))
+            exists = cursor.fetchall()
+            if len(exists) > 0:
+                return {"status":"error",
+                        "data": "someone already has this username!"}
             
             cursor.execute(f"""UPDATE {self.table_name} 
                            SET email = ?, username = ?, password = ? 

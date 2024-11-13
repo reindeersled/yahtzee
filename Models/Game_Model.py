@@ -38,9 +38,10 @@ class Game:
                 else:
                     return {"status":"success",
                             "data": True}
+            
             else:
                 return {"status":"error",
-                        "data": "no game name provided"}
+                        "data": "no game name or id provided"}
             
         except sqlite3.Error as error:
             return {"status":"error",
@@ -62,10 +63,11 @@ class Game:
             
             print("checking if game with that id exists")
             cursor.execute(f"SELECT * FROM {self.table_name} WHERE id = ?;", (game_id,))
-            results = cursor.fetchall()
-            if len(results) != 0:
+            exists = cursor.fetchall()
+            if len(exists) > 0:
                 return {"status": "error",
-                        "data": "game with this id already exists!"}
+                        "data": "that game id already exists!"
+                        }
             
             #other requirements
             print("checking other name requirements")
@@ -75,10 +77,18 @@ class Game:
                             "data": "bad name! no symbols or spaces"
                             }
             
-            game_data = (game_id, game_info["name"], game_info["created"], game_info["finished"])
+            game_data = (game_id, game_info["name"])
 
-            cursor.execute(f"INSERT INTO {self.table_name} VALUES (?, ?, ?, ?);", game_data)
+            cursor.execute(f"INSERT INTO {self.table_name} (id, name) VALUES (?, ?);", game_data)
             db_connection.commit()
+
+            cursor.execute(f"SELECT created, finished FROM {self.table_name} WHERE id = ?;", (game_id,))
+            times = cursor.fetchone()
+            print("pls plsp ps", times)
+            created = times[0]
+            finished = times[1]
+
+            game_data = (game_id, game_info["name"], created, finished)
             
             return {"status": "success",
                     "data": self.to_dict(game_data)
@@ -94,21 +104,31 @@ class Game:
         finally:
             db_connection.close()
     
-    def get(self, game_name=None):
+    def get(self, id=None, game_name=None):
         try: 
             print("getting one game")
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
+
+            if id:       
+                cursor.execute(f"SELECT * FROM {self.table_name} WHERE id = ?;", (id,))
+                get_game = cursor.fetchone()
+                if len(get_game) > 0:
+                    return {"status":"success",
+                        "data": self.to_dict(get_game)}
+                else:
+                    return {"status":"error",
+                        "data": "no game found with that id"}
             
             if game_name:
                 if self.exists(game_name=game_name)["data"] == False:
                     return {"status": "error",
-                        "data": "game with this name does not exist!"}
+                            "data": "game with this name does not exist!"}
             
                 cursor.execute(f"SELECT * FROM {self.table_name} WHERE name = ?;", (game_name,))
-                get_user = cursor.fetchone()
+                get_game = cursor.fetchone()
                 return {"status":"success",
-                        "data": self.to_dict(get_user)}
+                        "data": self.to_dict(get_game)}
             
             else:
                 return {"status": "error",
@@ -157,9 +177,15 @@ class Game:
                 return {"status":"error",
                         "data": "this name doesn't exist!"}
             
+            cursor.execute(f"SELECT * FROM {self.table_name} WHERE name = ? AND NOT id = ?;", (game_info["name"], game_info["id"]))
+            exists = cursor.fetchall()
+            if len(exists) > 0:
+                return {"status":"error",
+                        "data": "another game already has this name!"}
+            
             cursor.execute(f"""UPDATE {self.table_name} 
-                           SET name = ?, created = ?, finished = ? 
-                           WHERE id = ?;""", (game_info["name"], game_info["created"], game_info["finished"], game_info["id"],))
+                           SET name = ?
+                           WHERE id = ?;""", (game_info["name"],))
             db_connection.commit()
             return {"status":"success",
                     "data": game_info}
@@ -242,9 +268,7 @@ if __name__ == '__main__':
     Games.initialize_table()
 
     game_details={
-        "name":"yeahyeahwhatever",
-        "created":"August 19, 2024, 23:15",
-        "finished":"August 19, 2024, 23:15"
+        "name":"yeahyeahwhatever"
     }
     results = Games.create(game_details)
     print("Returned game-", results)
