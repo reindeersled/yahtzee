@@ -289,7 +289,6 @@ class Game_Model_Tests(unittest.TestCase):
         for i in range(len(self.games)):
             game = self.GameModel.create(self.games[i])
             original_games[game['data']["name"]] = game["data"] #game name maps to game object
-              
         updated_game = original_games[self.games[3]["name"]]
         updated_game["name"]="my_new_game_name"
         returned_games = self.GameModel.update(updated_game)
@@ -352,7 +351,7 @@ class Game_Model_Tests(unittest.TestCase):
         updated_game["finished"]=str(datetime.datetime.now())
          
         returned_game = self.GameModel.update(updated_game)
-         
+        print(returned_game)
         ensure_data_packet_formatting(self, returned_game, method, "success")
         self.assertEqual(returned_game["data"], updated_game)
         
