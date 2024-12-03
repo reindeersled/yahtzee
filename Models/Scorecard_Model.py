@@ -36,9 +36,8 @@ class Scorecard:
             cursor = db_connection.cursor()
             scorecard_id = random.randint(0, self.max_safe_id)
             
-            cursor.execute(f"""SELECT * FROM {self.table_name}
-                           WHERE {self.table_name}.card_id = {card_id};""")
-            print(cursor.fetchall()) #empty list
+            cursor.execute(f"SELECT * FROM {self.table_name} WHERE card_id = {card_id};")
+            print(cursor.fetchall()) #why is it an empty list
             turn_order = len(cursor.fetchall())
             if turn_order > 4:
                 return {"status": "error",
@@ -117,7 +116,7 @@ class Scorecard:
         finally:
             db_connection.close()
     
-    def get_all_card_scorecards(self, card_name:str): #each game can have up to 4 scorecards
+    def get_all_card_scorecards(self, card_name:str): #4 games, 1 scorecard each
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
@@ -191,10 +190,22 @@ class Scorecard:
         finally:
             db_connection.close()
 
-    def update(self, id, name=None, score_info=None): 
+    def update(self, id, name=None, categories=None): #score_info only updates categories
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
+
+            if self.get(id=id)["status"] == "error":
+                return {"status": "error",
+                        "data": "There is no scorecard with that id"}
+            if self.get(name=name)["status"] == "error":
+                return {"status": "error",
+                        "data": "There is no scorecard with that name"}
+            
+            cates = json.dumps(categories)
+
+            cursor.execute(f"UPDATE {self.table_name} SET categores={cates};")
+            db_connection.commit()
 
         except sqlite3.Error as error:
             return {"status":"error",
