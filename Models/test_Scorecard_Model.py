@@ -638,16 +638,16 @@ class Scorecard_Model_Tests(unittest.TestCase):
                 "five":20,
                 "six":24
                 },
-                "lower":{
-                    "three_of_a_kind":20,
-                    "four_of_a_kind":26,
-                    "full_house":25,
-                    "small_straight":0,
-                    "large_straight":40,
-                    "yahtzee":50,
-                    "chance":8
-                }
+            "lower":{
+                "three_of_a_kind":20,
+                "four_of_a_kind":26,
+                "full_house":25,
+                "small_straight":0,
+                "large_straight":40,
+                "yahtzee":50,
+                "chance":8
             }
+        }
         score_info_finished_no_bonus={
             "rolls_remaining":0,
             "upper":{
