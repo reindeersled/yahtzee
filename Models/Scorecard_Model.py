@@ -160,13 +160,13 @@ class Scorecard:
         finally:
             db_connection.close()
 
-    def get_all_game_usernames(self, card_name:str): 
+    def get_all_game_usernames(self, game_name:str): 
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
 
-            if card_name:
-                cursor.execute(f"SELECT name FROM {self.card_table_name}")
+            if game_name:
+                cursor.execute(f"SELECT username FROM {self.user_table_name} INNER JOIN {self.table_name} ON {self.table_name}.user_id = {self.user_table_name}.username WHERE {self.table_name}.name = {game_name};")
                 card_usernames = cursor.fetchall()
                 return {"status":"success",
                         "data": card_usernames}
@@ -180,29 +180,39 @@ class Scorecard:
         finally:
             db_connection.close()
 
-    def get_all_user_card_names(self, username:str): #based on the username provided, select all the names of the games with user_id = that
-        try: 
+    def get_all_user_game_names(self, username: str):
+        try:
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
 
             if username:
+                cursor.execute(f"""
+                    SELECT name 
+                    FROM {self.table_name}
+                    INNER JOIN {self.user_table_name} 
+                    ON {self.table_name}.user_id = {self.user_table_name}.id
+                    WHERE {self.user_table_name}.username = ?;
+                """, (username,))
 
-                cursor.execute(f"SELECT name FROM {self.card_table_name} WHERE username = ?;", (username,))
-                card_names = cursor.fetchall()
-                all_card_names = []
-                for username_data in username_data:
-                    all_card_names.append(self.to_dict(username_data))
-            
-                return {"status":"success",
-                    "data": all_card_names}
-            
-            else: 
-                return {"status":"error",
-                    "data": "no username provided"}
+                game_names = cursor.fetchall()
+                all_game_names = [game_name[0].split('|')[0] for game_name in game_names]
+
+                return {
+                    "status": "success",
+                    "data": all_game_names
+                }
+
+            else:
+                return {
+                    "status": "error",
+                    "data": "No username provided",
+                }
 
         except sqlite3.Error as error:
-            return {"status":"error",
-                    "data":error}
+            return {
+                "status": "error",
+                "data": str(error), 
+            }
         finally:
             db_connection.close()
 
@@ -210,18 +220,34 @@ class Scorecard:
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
-
-            if self.get(id=id)["status"] == "error":
-                return {"status": "error",
-                        "data": "There is no scorecard with that id"}
-            if self.get(name=name)["status"] == "error":
-                return {"status": "error",
-                        "data": "There is no scorecard with that name"}
             
             cates = json.dumps(categories)
 
-            cursor.execute(f"UPDATE {self.table_name} SET categories={cates} WHERE id={id};")
-            db_connection.commit()
+            if id:
+                if self.get(id=id)["status"] == "error":
+                    return {"status": "error",
+                            "data": "There is no scorecard with that id"}
+                cursor.execute(f"UPDATE {self.table_name} SET categories={cates} WHERE id={id};")
+                db_connection.commit()
+                return {
+                    "status": "success",
+                    "data": self.to_dict(self.get(id=id))
+                }
+            if name:
+                if self.get(name=name)["status"] == "error":
+                    return {"status": "error",
+                        "data": "There is no scorecard with that name"}
+                cursor.execute(f"UPDATE {self.table_name} SET categories={cates} WHERE name={name};")
+                db_connection.commit()
+                return {
+                    "status": "success",
+                    "data": self.to_dict(self.get(name=name))
+                }
+            else:
+                return {
+                    "status": "error",
+                    "data": "No id or name provided for updating."
+                }
 
         except sqlite3.Error as error:
             return {"status":"error",
@@ -235,11 +261,11 @@ class Scorecard:
             cursor = db_connection.cursor()
 
             if id:
-                deleted_data = self.get(id=id)["data"]
-
                 if self.get(id=id)["status"] == "error":
                     return {"status": "error",
                             "data": "no game exists at that id"}
+                
+                deleted_data = self.get(id=id)["data"]
 
                 cursor.execute(f"DELETE FROM {self.table_name} WHERE id = ?;", (id,))
                 db_connection.commit()
