@@ -52,17 +52,17 @@ class Scorecard:
             if len(existing_scorecards) > 3:
                 return {"status": "error", 
                         "data": "Too many players already in this game"}
+            else:
+                turn_order = len(existing_scorecards) + 1
 
-            turn_order = len(existing_scorecards) + 1
+                categories = json.dumps(self.create_blank_score_info())
+                cursor.execute(f"INSERT INTO {self.table_name} (id, card_id, user_id, categories, turn_order, name) VALUES (?, ?, ?, ?, ?, ?);",
+                            (scorecard_id, card_id, user_id, categories, turn_order, name,))
+                db_connection.commit()
 
-            categories = json.dumps(self.create_blank_score_info())
-            cursor.execute(f"INSERT INTO {self.table_name} (id, card_id, user_id, categories, turn_order, name) VALUES (?, ?, ?, ?, ?, ?);",
-                           (scorecard_id, card_id, user_id, categories, turn_order, name,))
-            db_connection.commit()
+                card_tuple = (scorecard_id, card_id, user_id, categories, turn_order, name)
 
-            card_tuple = (scorecard_id, card_id, user_id, categories, turn_order, name)
-
-            return {"status": "success", "data": self.to_dict(card_tuple)}
+                return {"status": "success", "data": self.to_dict(card_tuple)}
 
         except sqlite3.Error as error:
             return {"status": "error", "data": str(error)}
@@ -128,7 +128,7 @@ class Scorecard:
         finally:
             db_connection.close()
     
-    def get_all_game_scorecards(self, card_name:str): #4 games, 1 scorecard each
+    def get_all_game_scorecards(self, card_name:str): #4 games max, 1 scorecard each
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
@@ -160,7 +160,7 @@ class Scorecard:
         finally:
             db_connection.close()
 
-    def get_all_card_usernames(self, card_name:str): 
+    def get_all_game_usernames(self, card_name:str): 
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
@@ -236,6 +236,10 @@ class Scorecard:
 
             if id:
                 deleted_data = self.get(id=id)["data"]
+
+                if self.get(id=id)["status"] == "error":
+                    return {"status": "error",
+                            "data": "no game exists at that id"}
 
                 cursor.execute(f"DELETE FROM {self.table_name} WHERE id = ?;", (id,))
                 db_connection.commit()
