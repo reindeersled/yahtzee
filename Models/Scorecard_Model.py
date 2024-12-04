@@ -77,22 +77,22 @@ class Scorecard:
 
             if name:
                 cursor.execute(f"SELECT * FROM {self.table_name} WHERE name = ?;", (name,))
-                card_info = cursor.fetchone()  # Fetch only one result
+                card_info = cursor.fetchone()  
 
                 if card_info:
                     return {"status": "success",
-                            "data": self.to_dict(card_info)}  # Pass a single tuple
+                            "data": self.to_dict(card_info)}  
                 else:
                     return {"status": "error",
                             "data": "No card found"}
             
             if id:
                 cursor.execute(f"SELECT * FROM {self.table_name} WHERE id = ?;", (id,))
-                card_info = cursor.fetchone()  # Fetch a single result
+                card_info = cursor.fetchone()  
 
                 if card_info:
                     return {"status": "success",
-                            "data": self.to_dict(card_info)}  # Pass a single tuple
+                            "data": self.to_dict(card_info)}  #
                 else:
                     return {"status": "error",
                             "data": "No card found"}
@@ -102,7 +102,7 @@ class Scorecard:
 
         except sqlite3.Error as error:
             return {"status": "error",
-                    "data": str(error)}  # Return error as string, for better error tracing
+                    "data": str(error)} 
         finally:
             db_connection.close()
 
@@ -128,13 +128,13 @@ class Scorecard:
         finally:
             db_connection.close()
     
-    def get_all_game_scorecards(self, card_name:str): #4 games max, 1 scorecard each
+    def get_all_game_scorecards(self, game_name:str): #4 games max, 1 scorecard each
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
 
-            if card_name:
-                cursor.execute(f"SELECT id FROM {self.card_table_name} WHERE name = ?;", (card_name,))
+            if game_name:
+                cursor.execute(f"SELECT id FROM {self.card_table_name} WHERE name = ?;", (game_name,))
                 game_id = cursor.fetchone()
 
                 if not game_id:
@@ -166,10 +166,18 @@ class Scorecard:
             cursor = db_connection.cursor()
 
             if game_name:
-                cursor.execute(f"SELECT username FROM {self.user_table_name} INNER JOIN {self.table_name} ON {self.table_name}.user_id = {self.user_table_name}.username WHERE {self.table_name}.name = {game_name};")
+                cursor.execute(f"""
+                    SELECT username
+                    FROM {self.user_table_name}
+                    INNER JOIN {self.table_name} 
+                    ON {self.table_name}.user_id = {self.user_table_name}.id
+                    WHERE {self.table_name}.name = {game_name};
+                """)
                 card_usernames = cursor.fetchall()
+                all_card_usernames = [card_username[0] for card_username in card_usernames]
+
                 return {"status":"success",
-                        "data": card_usernames}
+                        "data": all_card_usernames}
             else:
                 return {"status":"error",
                         "data":"no card name given"}
@@ -216,7 +224,7 @@ class Scorecard:
         finally:
             db_connection.close()
 
-    def update(self, id, name=None, categories=None): #score_info only updates categories
+    def update(self, id, name=None, categories=None): 
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
@@ -265,13 +273,13 @@ class Scorecard:
                     return {"status": "error",
                             "data": "no game exists at that id"}
                 
-                deleted_data = self.get(id=id)["data"]
+                deleted_data = self.get(id=id)["data"] #a dict
 
-                cursor.execute(f"DELETE FROM {self.table_name} WHERE id = ?;", (id,))
+                cursor.execute(f"DELETE FROM {self.table_name} WHERE id = {id};")
                 db_connection.commit()
 
                 return {"status": "success",
-                        "data": self.to_dict(deleted_data)} 
+                        "data": deleted_data} 
             else:
                 return {"status": "error",
                         "data": "no id provided"}
