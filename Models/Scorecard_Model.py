@@ -134,14 +134,16 @@ class Scorecard:
             cursor = db_connection.cursor()
 
             if game_name:
-                cursor.execute(f"SELECT id FROM {self.card_table_name} WHERE name = ?;", (game_name,))
-                game_id = cursor.fetchone()
+                g_name = game_name.split('|')[0]
+                game_id = cursor.execute(f"SELECT id FROM {self.card_table_name} WHERE name = ?;", (g_name,)).fetchall()
 
-                if not game_id:
-                    return {"status": "error",
-                            "data": "no game with that id exists"}
+                if len(game_id) == 0:
+                    return {"status": "success",
+                            "data": game_id}
+                else:
+                    game_id = game_id[0]
 
-                cursor.execute(f"SELECT * FROM {self.table_name} INNER JOIN {self.card_table_name} ON {self.table_name}.card_id = {game_id};")
+                cursor.execute(f"SELECT * FROM {self.table_name} INNER JOIN {self.card_table_name} ON {self.table_name}.card_id = ?;", (game_id,))
                 all_scorecards = cursor.fetchall()
 
                 all_scorecards_list = []
@@ -160,20 +162,37 @@ class Scorecard:
         finally:
             db_connection.close()
 
-    def get_all_game_usernames(self, game_name:str): 
+    def get_all_game_usernames(self, game_name:str): #wow there is such an easier way to do this... select the second part from names in scorecard, those are the usernames bro
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
 
             if game_name:
+                cursor.execute(f"SELECT id FROM {self.table_name} WHERE name = ?;", (game_name,))
+                real_name = cursor.fetchall()
+
+                if len(real_name) == 0:
+                    return {"status": "success",
+                            "data": real_name}
+                
+                g_name = game_name.split('|')[0]
+                game_id = cursor.execute(f"SELECT id from {self.card_table_name} WHERE name = ?;", (g_name,)).fetchall()
+                if len(game_id) == 0:
+                    return {"status": "success",
+                            "data": game_id}
+                else: 
+                    game_id = game_id[0]
+                
                 cursor.execute(f"""
                     SELECT username
                     FROM {self.user_table_name}
                     INNER JOIN {self.table_name} 
                     ON {self.table_name}.user_id = {self.user_table_name}.id
-                    WHERE {self.table_name}.name = {game_name};
-                """)
+                    WHERE {self.table_name}.card_id = ?;
+                """, (game_id,))
                 card_usernames = cursor.fetchall()
+                
+                print(card_usernames)
                 all_card_usernames = [card_username[0] for card_username in card_usernames]
 
                 return {"status":"success",
@@ -239,7 +258,7 @@ class Scorecard:
                 db_connection.commit()
                 return {
                     "status": "success",
-                    "data": self.to_dict(self.get(id=id))
+                    "data": self.to_dict(self.get(id=id)["categories"])
                 }
             if name:
                 if self.get(name=name)["status"] == "error":
@@ -249,7 +268,7 @@ class Scorecard:
                 db_connection.commit()
                 return {
                     "status": "success",
-                    "data": self.to_dict(self.get(name=name))
+                    "data": self.to_dict(self.get(name=name)["categories"])
                 }
             else:
                 return {
@@ -375,5 +394,5 @@ if __name__ == '__main__':
         "name": "N64-Reunion|mario_official" 
     }
 
-    results = Scorecards.create(game_details["game_id"], game_details["user_id"], game_details["name"])
+    results = Scorecards.get_all_game_usernames(game_details["name"])
     print("Returned game-", results)
