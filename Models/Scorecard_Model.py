@@ -168,35 +168,28 @@ class Scorecard:
             cursor = db_connection.cursor()
 
             if game_name:
-                cursor.execute(f"SELECT id FROM {self.table_name} WHERE name = ?;", (game_name,))
-                real_name = cursor.fetchall()
 
-                if len(real_name) == 0:
+                usernames = []
+
+                exists = cursor.execute(f"SELECT * FROM {self.table_name} WHERE name = ?;", (game_name,)).fetchall()
+                if len(exists) == 0:
                     return {"status": "success",
-                            "data": real_name}
+                            "data": usernames}
                 
                 g_name = game_name.split('|')[0]
                 game_id = cursor.execute(f"SELECT id from {self.card_table_name} WHERE name = ?;", (g_name,)).fetchall()
                 if len(game_id) == 0:
                     return {"status": "success",
-                            "data": game_id}
+                            "data": usernames}
                 else: 
                     game_id = game_id[0]
-                
-                cursor.execute(f"""
-                    SELECT username
-                    FROM {self.user_table_name}
-                    INNER JOIN {self.table_name} 
-                    ON {self.table_name}.user_id = {self.user_table_name}.id
-                    WHERE {self.table_name}.card_id = ?;
-                """, (game_id,))
-                card_usernames = cursor.fetchall()
-                
-                print(card_usernames)
-                all_card_usernames = [card_username[0] for card_username in card_usernames]
+
+                scorecard_names = cursor.execute(f"SELECT name FROM {self.table_name} WHERE card_id = ?;", (game_id,)).fetchall()
+                for sc_name in scorecard_names:
+                    usernames.append(sc_name[0].split('|')[1])
 
                 return {"status":"success",
-                        "data": all_card_usernames}
+                        "data": usernames}
             else:
                 return {"status":"error",
                         "data":"no card name given"}
