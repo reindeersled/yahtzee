@@ -134,19 +134,19 @@ class Scorecard:
             cursor = db_connection.cursor()
 
             if game_name:
-                g_name = game_name.split('|')[0]
-                game_id = cursor.execute(f"SELECT id FROM {self.card_table_name} WHERE name = ?;", (g_name,)).fetchall()
+                all_scorecards_list = []
+                if '|' in game_name:
+                    game_name = game_name.split('|')[0]
+                game_id = cursor.execute(f"SELECT id FROM {self.card_table_name} WHERE name = ?;", (game_name,)).fetchall()
 
                 if len(game_id) == 0:
                     return {"status": "success",
-                            "data": game_id}
+                            "data": all_scorecards_list}
                 else:
-                    game_id = game_id[0]
+                    game_id = game_id[0][0]
 
-                cursor.execute(f"SELECT * FROM {self.table_name} INNER JOIN {self.card_table_name} ON {self.table_name}.card_id = ?;", (game_id,))
-                all_scorecards = cursor.fetchall()
+                all_scorecards = cursor.execute(f"SELECT * FROM {self.table_name} WHERE card_id =?;", (game_id,)).fetchall()
 
-                all_scorecards_list = []
                 for scorecard in all_scorecards:
                     all_scorecards_list.append(self.to_dict(scorecard))
             
@@ -162,27 +162,23 @@ class Scorecard:
         finally:
             db_connection.close()
 
-    def get_all_game_usernames(self, game_name:str): #wow there is such an easier way to do this... select the second part from names in scorecard, those are the usernames bro
+    def get_all_game_usernames(self, game_name:str): 
         try: 
             db_connection = sqlite3.connect(self.db_name)
             cursor = db_connection.cursor()
 
             if game_name:
-
                 usernames = []
 
-                exists = cursor.execute(f"SELECT * FROM {self.table_name} WHERE name = ?;", (game_name,)).fetchall()
-                if len(exists) == 0:
-                    return {"status": "success",
-                            "data": usernames}
-                
-                g_name = game_name.split('|')[0]
-                game_id = cursor.execute(f"SELECT id from {self.card_table_name} WHERE name = ?;", (g_name,)).fetchall()
+                if '|' in game_name:
+                    game_name = game_name.split('|')[0]
+
+                game_id = cursor.execute(f"SELECT id FROM {self.card_table_name} WHERE name = ?;", (game_name,)).fetchall()
                 if len(game_id) == 0:
                     return {"status": "success",
                             "data": usernames}
                 else: 
-                    game_id = game_id[0]
+                    game_id = game_id[0][0]
 
                 scorecard_names = cursor.execute(f"SELECT name FROM {self.table_name} WHERE card_id = ?;", (game_id,)).fetchall()
                 for sc_name in scorecard_names:
@@ -247,21 +243,21 @@ class Scorecard:
                 if self.get(id=id)["status"] == "error":
                     return {"status": "error",
                             "data": "There is no scorecard with that id"}
-                cursor.execute(f"UPDATE {self.table_name} SET categories={cates} WHERE id={id};")
+                cursor.execute(f"UPDATE {self.table_name} SET categories=? WHERE id=?;", (cates, id,))
                 db_connection.commit()
                 return {
                     "status": "success",
-                    "data": self.to_dict(self.get(id=id)["categories"])
+                    "data": self.get(id=id)["data"]
                 }
             if name:
                 if self.get(name=name)["status"] == "error":
                     return {"status": "error",
                         "data": "There is no scorecard with that name"}
-                cursor.execute(f"UPDATE {self.table_name} SET categories={cates} WHERE name={name};")
+                cursor.execute(f"UPDATE {self.table_name} SET categories=? WHERE name=?;", (cates, id,))
                 db_connection.commit()
                 return {
                     "status": "success",
-                    "data": self.to_dict(self.get(name=name)["categories"])
+                    "data": self.get(name=name)["data"]
                 }
             else:
                 return {

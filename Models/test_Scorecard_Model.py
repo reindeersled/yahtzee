@@ -235,7 +235,7 @@ class Scorecard_Model_Tests(unittest.TestCase):
         finally:
             db_connection.close()
     
-    def test_create_too_many_scorecards_same_game_different_users(self):
+    def test_create_too_many_scorecards_same_game_different_users(self): #error
         method="scorecard.create"
         all_scorecards = []
         game = list(self.games.values())[0]
@@ -250,7 +250,9 @@ class Scorecard_Model_Tests(unittest.TestCase):
                         "username":"bowser_official",
                         "password":"IamBOWSER4Real"}
         new_user = self.UserModel.create(new_user_info)['data']
+        print("bruh", new_user)
         new_scorecard = self.ScorecardModel.create(game["id"], new_user["id"], game["name"]+"|"+new_user["username"])
+        print("common man", new_scorecard)
         ensure_data_packet_formatting(self, new_scorecard, method, "error") #max of 4 players per game
         
         all_scorecards_returned = self.ScorecardModel.get_all()['data']
@@ -380,7 +382,7 @@ class Scorecard_Model_Tests(unittest.TestCase):
         self.assertEqual(len(all_game_usernames["data"]), 0)
         print("test_get_all_game_scorecards_no_scorecards passed!") 
            
-    def test_get_all_game_scorecards_1_scorecard(self):
+    def test_get_all_game_scorecards_1_scorecard(self): 
         method = "scorecard._game_scorecards"
         all_scorecards = {}
         for i in range(len(self.users)):
@@ -400,7 +402,7 @@ class Scorecard_Model_Tests(unittest.TestCase):
         self.assertEqual(all_game_scorecards["data"][0]["turn_order"], all_scorecards[game_name_to_get]["turn_order"])
         print("test_get_all_game_scorecards_1_scorecard passed!") 
         
-    def test_get_all_game_scorecards_many_scorecards(self):
+    def test_get_all_game_scorecards_many_scorecards(self): 
         method = "scorecard.get_all_game_scorecards"
         #add 4 scorecards to the same game
         all_scorecards=[]
@@ -457,7 +459,7 @@ class Scorecard_Model_Tests(unittest.TestCase):
         self.assertEqual(all_game_usernames["data"][0], user["username"])
         print("test_get_all_game_usernames_1_scorecard passed!") 
     
-    def test_get_all_game_usernames_many_scorecards(self):
+    def test_get_all_game_usernames_many_scorecards(self): 
         method = "scorecard.et_all_game_usernames"
         game = list(self.games.values())[1]
         all_users =[]
@@ -520,7 +522,7 @@ class Scorecard_Model_Tests(unittest.TestCase):
             self.assertIn(game_name_to_check, all_user_game_names['data'])
         print("test_get_all_user_game_names_many_games passed!") 
         
-    def test_update_scorecard_exists(self):
+    def test_update_scorecard_exists(self): #error
         #only tests updating categories since that will be the way we use update in pur project
         method = "scorecard.update"
         all_scorecards=[]

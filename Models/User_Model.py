@@ -78,7 +78,7 @@ class User:
             
             #other requirements
             for letter in user_info["username"]:
-                if letter.isalpha() == False:
+                if letter.isalpha() == False and letter.isdigit() == False and letter != '_' and letter != '-':
                     return {"status": "error",
                             "data": "bad username! no symbols or spaces"
                             }
@@ -90,10 +90,6 @@ class User:
                 return {"status": "error",
                         "data": "bad email, probably invalid"} 
             
-            for letter in user_info["email"]:
-                if letter.isalpha() == False and letter != '@' and letter != '.' and letter.is_integer() == False:
-                    return {"status": "error",
-                            "data": "bad email, also probably invalid"} 
             
             user_data = (user_id, user_info["email"], user_info["username"], user_info["password"])
 
@@ -187,6 +183,20 @@ class User:
             if len(exists) > 0:
                 return {"status":"error",
                         "data": "someone already has this username!"}
+            
+            for letter in user_info["username"]:
+                if letter.isalpha() == False and letter.isdigit() == False and letter != '_' and letter != '-':
+                    return {"status": "error",
+                            "data": "bad username! no symbols or spaces"
+                            }
+            if len(user_info["password"]) < 4:
+                return {"status": "error",
+                        "data": "password too short, try again with a longer one"
+                        } 
+            if "@" not in user_info["email"] or "." not in user_info["email"]:
+                return {"status": "error",
+                        "data": "bad email, probably invalid"} 
+
             
             cursor.execute(f"""UPDATE {self.table_name} 
                            SET email = ?, username = ?, password = ? 
