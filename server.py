@@ -1,4 +1,4 @@
-# flask --app data_server run
+# flask --app server run
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -17,15 +17,33 @@ def about():
     
     return render_template('/game.html', username=username)
 
-@app.route('/user_games')
+@app.route('/games')
+def all_games():
+    username = request.args.get('username')
+    
+    return render_template('/games.html', username=username)
+
+@app.route('/games/<game_name>')
+def about():
+    username = request.args.get('username')
+    
+    return render_template('/game.html', username=username)
+
+@app.route('/games/score')
+def about():
+    username = request.args.get('username')
+    
+    return render_template('/game.html', username=username)
+
+@app.route('/users/games/<user_name>')
 def user_games():
     username = request.args.get('username')
     return render_template('/user_games.html',username=username)
 
-@app.route('/user_details')
+@app.route('/users/<user_name>')
 def user_details():
     username = request.args.get('username')
-    return render_template('user_details.html',username=username)
+    return render_template('/user_details.html',username=username)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
