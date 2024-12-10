@@ -12,7 +12,7 @@
   </head>
   <body>
     
-    <form action="/game" method="GET">
+    <form action="/users/{{ username_input }}" method="GET">
         <label for="username_input">Username:</label>
         <input id="username_input" type="text" name="username" /> <br />
      
@@ -20,7 +20,7 @@
         <input id="password_input" type="text" name="password" />
      
         <input type="submit" id="login_submit" value="Submit" />
-      </form>
+    </form>
 
       {% include 'partial/footer.html' %}
     
