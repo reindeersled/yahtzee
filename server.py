@@ -2,68 +2,37 @@
 from flask import Flask
 from flask import render_template
 from flask import request
-import os
+import os, sys
+
+#Connect Controller definitions
+fpath = os.path.join(os.path.dirname(__file__), 'controllers')
+sys.path.append(fpath)
+fpath = os.path.join(os.path.dirname(__file__), 'models')
+sys.path.append(fpath)
+from controllers import UserController, GameController, ScorecardController, SessionController
 
 app = Flask(__name__, static_url_path='', static_folder='static')
 
-@app.route('/')
-def index():
-    
-    return render_template('/login.html')
+#The Router section of our application conects routes to Contoller methods
 
-@app.route('/games')
-def all_games():
-    username = request.args.get('username')
-    
-    return render_template('/games.html', username=username)
+#session
+app.add_url_rule('/', view_func=UserController.login, methods = ['GET'])
+app.add_url_rule('/login', view_func=UserController.login, methods = ['GET'])
 
-@app.route('/games/<game_name>')
-def game():
-    username = request.args.get('username')
-    
-    return render_template('/game.html', username=username)
+#game
+app.add_url_rule('/games/<username>', view_func=GameController.fruit, methods = ['POST', 'GET'])
+app.add_url_rule('/games', view_func=GameController.fruit, methods = ['POST', 'GET'])
+app.add_url_rule('/games/join', view_func=GameController.fruit, methods = ['POST', 'GET'])
+app.add_url_rule('/games/delete/<game_name>/<username>', view_func=GameController.fruit, methods = ['POST', 'GET'])
+app.add_url_rule('/game/<game_name>/<username>', view_func=GameController.single_fruit, methods = ['GET'])
 
-@app.route('/games/scorecards/<game_name>')
-def scorecard_by_game():
-    username = request.args.get('username')
-    
-    return render_template('/scorecards.html', username=username)
+#scorecards
+app.add_url_rule('/scorecards/<scorecard_id>', view_func=GameController.single_fruit, methods = ['GET'])
 
-@app.route('/users/games/<user_name>')
-def user_games(user_name):
-    return render_template('/user_games.html',username=user_name)
-
-@app.route('/users/<user_name>')
-def user_details(user_name):
-
-    return render_template('/user_details.html',username=user_name)
-
-@app.route('/scores')
-def high_scores():
-    username = request.args.get('username')
-    return render_template('/scores.html',username=username)
-
-@app.route('/scores/<user_name>')
-def user_scores():
-    username = request.args.get('username')
-    return render_template('/user_scores.html',username=username)
-
-@app.route('/scorecards')
-def scorecards():
-    username = request.args.get('username')
-    return render_template('/scorecards.html',username=username)
-
-@app.route('/scorecards/<scorecard_id>')
-def scorecard():
-    username = request.args.get('username')
-    return render_template('/scorecard.html',username=username)
-
-@app.route('/scorecards/game/<scorecard_id>')
-def scorecard_by_game_scorecard():
-    username = request.args.get('username')
-    return render_template('/scorecard.html',username=username)
-
-
+#users
+app.add_url_rule('/users', view_func=GameController.single_fruit, methods = ['GET', 'POST'])
+app.add_url_rule('/users/<username>', view_func=GameController.single_fruit, methods = ['GET', 'POST'])
+app.add_url_rule('/users/delete/<username>', view_func=GameController.single_fruit, methods = ['GET'])
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
