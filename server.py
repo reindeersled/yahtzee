@@ -30,14 +30,13 @@ def scorecard_by_game():
     return render_template('/scorecards.html', username=username)
 
 @app.route('/users/games/<user_name>')
-def user_games():
-    username = request.args.get('username')
-    return render_template('/user_games.html',username=username)
+def user_games(user_name):
+    return render_template('/user_games.html',username=user_name)
 
-@app.route('/users/', methods=['GET'])
-def user_details():
-    username = request.args.get('username')
-    return render_template('/user_details.html',username=username)
+@app.route('/users/<user_name>')
+def user_details(user_name):
+
+    return render_template('/user_details.html',username=user_name)
 
 @app.route('/scores')
 def high_scores():
