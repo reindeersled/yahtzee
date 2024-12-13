@@ -11,9 +11,9 @@
       </style>
   </head>
   <body>
-    <h1>{{ username }} Games</h1>
+    <h1>Yahtzee Games</h1>
 
-    {% for  game in user_games %}
+    {% for game in user_games %}
       <ol>{{ game.name }}</ol> <button type="button" class="btn btn-danger">Delete</button>
     {% endfor %}
 
