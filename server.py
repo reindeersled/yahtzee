@@ -16,8 +16,8 @@ app = Flask(__name__, static_url_path='', static_folder='static')
 #The Router section of our application conects routes to Contoller methods
 
 #session
-app.add_url_rule('/', view_func=SessionController.login, methods = ['GET'])
-app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET', 'POST'])
+app.add_url_rule('/', view_func=SessionController.index, methods = ['GET'])
+app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
 
 #game
 # app.add_url_rule('/games/<username>', view_func=GameController.user_games, methods = ['GET'])

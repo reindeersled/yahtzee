@@ -40,6 +40,16 @@ def users():
         elif action=='Create':
             user_games = []
             high_scores = []
+            if User.exists(username=user_info['username'])["data"]:
+                return jsonify({
+                    "success": False,
+                    "data": "This user already exists!" #no i don't??
+                })
+            if not user_data['username'] or not user_data['password'] or not user_data['email']:
+                return jsonify({
+                    "success": False,
+                    "data": "You need to fill out the form!"
+                })
             user_data = User.create(user_info)["data"]
 
             return render_template('user_games.html', user_data=user_data, user_games=user_games, high_scores=high_scores)
@@ -47,6 +57,8 @@ def users():
         elif action=='Delete':
             removed_user = User.remove(user_info['username'])["data"]
             return render_template('user_games.html', removed_user=removed_user)
+        
+    return render_template('user_details.html')
 
 # def update_user():
 #     print(f"request.url={request.url}")
