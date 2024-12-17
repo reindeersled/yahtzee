@@ -17,7 +17,7 @@ app = Flask(__name__, static_url_path='', static_folder='static')
 
 #session
 app.add_url_rule('/', view_func=SessionController.login, methods = ['GET'])
-app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
+app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET', 'POST'])
 
 #game
 # app.add_url_rule('/games/<username>', view_func=GameController.user_games, methods = ['GET'])
@@ -30,7 +30,7 @@ app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
 #app.add_url_rule('/scorecards/<scorecard_id>', view_func=ScorecardController.single_fruit, methods = ['POST'])
 
 #users
-app.add_url_rule('/users', view_func=UserController.create_user, methods = ['GET', 'POST'])
+app.add_url_rule('/users', view_func=UserController.users, methods = ['GET', 'POST'])
 # app.add_url_rule('/users/<username>', view_func=UserController.update_user, methods = ['GET', 'POST'])
 # app.add_url_rule('/users/delete/<username>', view_func=UserController.delete_user, methods = ['GET'])
 

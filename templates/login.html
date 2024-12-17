@@ -12,15 +12,15 @@
   </head>
   <body>
     
-    <form action="/users" method="POST">
+    <form action="/login" method="POST">
         <label for="username_input">Username:</label>
         <input id="username_input" type="text" name="username" /> <br />
      
         <label for="password_input">Password:</label>
         <input id="password_input" type="text" name="password" />
      
-        <input type="submit" id="login_submit" value="Submit" />
-        <input type="submit" id="create_submit" value="Create"/>
+        <input type="submit" name="action" id="login_submit" value="Submit" />
+        <input type="submit" name="action" id="create_submit" value="Create"/>
     </form>
 
       {% include 'partial/footer.html' %}

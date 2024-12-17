@@ -12,7 +12,7 @@
   </head>
   <body>
     
-    <form action="/game" method="GET">
+    <form action="/users" method="POST">
         <label for="username_input">User name:</label>
         <input id="username_input" type="text" name="username" /> <br />
      
@@ -22,8 +22,8 @@
         <label for="email_input">Email:</label>
         <input id="email_input" type="text" name="email" /> <br />
      
-        <input type="submit" id="details_delete" value="Delete" />
-        <input type="submit" id="details_update" value="Update/Create" />
+        <input type="submit" name="action" id="details_delete" value="Delete" />
+        <input type="submit" name="action" id="details_create" value="Create" /> <!--update too eventually-->
 
     </form>
 

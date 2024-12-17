@@ -17,7 +17,7 @@
       <ol>{{ game.name }}</ol> <button type="button" class="btn btn-danger">Delete</button>
     {% endfor %}
 
-    <form action="/create" method="GET">
+    <form action="/create" method="POST">
       <input id="new_game" type="text" name="new_game" /> <button type="button" class="btn btn-success">Create</button> <button type="button" class="btn btn-primary">Join</button>
     </form>
 
