@@ -1,8 +1,9 @@
 from flask import jsonify, render_template
 from flask import request
+import os
 
 from Models import User_Model
-User_DB_location = '../yahtzeeDB.db'
+User_DB_location = f"{os.getcwd()}/Models/yahtzeeDB.db"
 User = User_Model.User(User_DB_location, 'users')
 
 
@@ -23,47 +24,40 @@ def users():
                 "password": request.form.get('password'),
                 "email": request.form.get('email')
             }
+        if not user_info['username'] or not user_info['password'] or not user_info['email']:
+            return render_template('user_details.html', feedback="You need to fill out the form!")
+        
+        user_dict = User.to_dict(User.get(username=user_info['username'])['data'])
         
         if action == 'Update':
             if User.exists(username=user_info['username'])['data']:
-                user_data = User.to_dict(User.get(username=user_info['username'])['data'])['data']
                 user_games = []
                 high_scores = []
 
-                return render_template('user_games.html', user_data=user_data, user_games=user_games, high_scores=high_scores)
+                return render_template('user_games.html', user_dict=user_dict, feedback="User info updated!", user_games=user_games, high_scores=high_scores)
             
             else:
-                return jsonify({
-                    "That user doesn't exist!"
-                })
+                return render_template('user_games.html', user_dict=user_dict, feedback="That user doesn't exist!", user_games=user_games, high_scores=high_scores)
 
-        elif action=='Create':
+        elif action == 'Create':
             user_games = []
             high_scores = []
-            if User.exists(username=user_info['username'])["data"]:
-                return jsonify({
-                    "success": False,
-                    "data": "This user already exists!" #no i don't??
-                })
-            if not user_data['username'] or not user_data['password'] or not user_data['email']:
-                return jsonify({
-                    "success": False,
-                    "data": "You need to fill out the form!"
-                })
-            user_data = User.create(user_info)["data"]
+            user_exists = User.exists(username=user_info['username'])
+            
+            if user_exists["data"]:
+                return render_template('user_details.html', user_dict=user_dict, feedback="This user already exists!")
+            
+            create_user = User.create(user_info)
+            if create_user["status"] != 'success':
+                return render_template('user_details.html', user_dict=user_dict, feedback=create_user['data'])
 
-            return render_template('user_games.html', user_data=user_data, user_games=user_games, high_scores=high_scores)
+            return render_template('user_games.html', user_dict=user_dict, feedback="New user created!", user_games=user_games, high_scores=high_scores)
 
         elif action=='Delete':
-            removed_user = User.remove(user_info['username'])["data"]
-            return render_template('user_games.html', removed_user=removed_user)
+            removed_user = User.remove(user_info['username'])
+            if removed_user["status"] != 'success':
+                return render_template('user_details.html', user_dict=user_dict, feedback=removed_user['data'])
+            else:
+                return render_template('login.html', feedback=removed_user['status'])
         
     return render_template('user_details.html')
-
-# def update_user():
-#     print(f"request.url={request.url}")
-    
-#     if request.method == 'GET':
-
-        
-# def delete_user()

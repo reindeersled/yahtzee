@@ -4,6 +4,7 @@ import random
 
 class User:
     def __init__(self, db_name, table_name):
+        print("user model constructor", db_name)
         self.db_name =  db_name
         self.max_safe_id = 9007199254740991 #maximun safe Javascript integer
         self.table_name = table_name
