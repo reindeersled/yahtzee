@@ -38,10 +38,10 @@ def users():
                 user_games = []
                 high_scores = []
 
-                return render_template('user_games.html', user_dict=user_dict, feedback="User info updated!", user_games=user_games, high_scores=high_scores)
+                return render_template('user_details.html', user_dict=user_dict, feedback="User info updated!", user_games=user_games, high_scores=high_scores)
             
             else:
-                return render_template('user_games.html', user_dict=user_dict, feedback="That user doesn't exist!")
+                return render_template('user_details.html', user_dict=user_dict, feedback="That user doesn't exist!")
 
         elif action == 'Create':
             user_games = []
@@ -74,11 +74,10 @@ def specific_user(username):
     print(request.form)
 
     u_dict = User.get(username=username)['data']
-    if u_dict['status'] == 'success':
+    if (isinstance(u_dict, dict)):
         user_dict = u_dict
     else:
         user_dict = {}
-
 
     if request.method == 'GET':
         return render_template('user_details.html', user_dict=user_dict)
@@ -91,10 +90,14 @@ def specific_user(username):
                 "password": request.form.get('password'),
                 "email": request.form.get('email')
             }
-            feedback = User.update(user_info)['data']
+            exists = User.exists(username=user_info['username'])
+            if exists['data'] == True:
+                feedback = User.update(user_info)['data']
+            else:
+                feedback = exists['data']
             print(feedback)
 
-            return render_template('user_details.html', user_dict=user_dict)
+            return render_template('user_details.html', user_dict=user_dict, feedback=feedback)
         
         elif action == 'Delete':
             return render_template('user_details.html', feedback=feedback, user_dict=user_dict)

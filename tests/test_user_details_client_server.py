@@ -267,7 +267,7 @@ class Basic_Web_Tests(unittest.TestCase):
         self.enter_and_submit_user_info(new_username, new_password, new_email)
         wait(self.browser, 1)
 
-        self.browser.save_screenshot(f"update_user_exits.png")
+        self.browser.save_screenshot(f"update_user_exists.png")
 
         updated_user = self.User_Model.get(id=orig_user["data"]["id"])
         self.assertEqual(updated_user["status"], "success", "Original user should still exist.")
