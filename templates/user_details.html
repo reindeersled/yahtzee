@@ -23,8 +23,8 @@
         <label for="email_input">Email:</label>
         <input id="email_input" type="text" name="email" /> <br />
      
-        <input type="submit" name="action" id="user_details_submit" value="Delete" />
-        <input type="submit" name="action" id="user_details_submit" value="Create" /> <!--update too eventually-->
+        <input type="submit" name="action" id="user_details_delete" value="Delete" />
+        <input type="submit" name="action" id="user_details_submit" value="{% if user_dict %}Update{% else %}Create{% endif %}" /> <!--update too eventually-->
 
     </form>
 

@@ -27,7 +27,11 @@ def users():
         if not user_info['username'] or not user_info['password'] or not user_info['email']:
             return render_template('user_details.html', feedback="You need to fill out the form!")
         
-        user_dict = User.to_dict(User.get(username=user_info['username'])['data'])
+        u_dict = User.get(username=user_info['username'])['data']
+        if (isinstance(u_dict, dict)):
+            user_dict = u_dict
+        else:
+            user_dict = {}
         
         if action == 'Update':
             if User.exists(username=user_info['username'])['data']:
@@ -37,7 +41,7 @@ def users():
                 return render_template('user_games.html', user_dict=user_dict, feedback="User info updated!", user_games=user_games, high_scores=high_scores)
             
             else:
-                return render_template('user_games.html', user_dict=user_dict, feedback="That user doesn't exist!", user_games=user_games, high_scores=high_scores)
+                return render_template('user_games.html', feedback="That user doesn't exist!")
 
         elif action == 'Create':
             user_games = []
@@ -45,9 +49,10 @@ def users():
             user_exists = User.exists(username=user_info['username'])
             
             if user_exists["data"]:
-                return render_template('user_details.html', user_dict=user_dict, feedback="This user already exists!")
+                return render_template('user_details.html', feedback="This user already exists!")
             
             create_user = User.create(user_info)
+            print("okay???", create_user)
             if create_user["status"] != 'success':
                 return render_template('user_details.html', user_dict=user_dict, feedback=create_user['data'])
 
@@ -58,6 +63,6 @@ def users():
             if removed_user["status"] != 'success':
                 return render_template('user_details.html', user_dict=user_dict, feedback=removed_user['data'])
             else:
-                return render_template('login.html', feedback=removed_user['status'])
+                return render_template('login.html', feedback="User deleted!")
         
     return render_template('user_details.html')
