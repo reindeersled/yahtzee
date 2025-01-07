@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 
 from DB_Helper import wipe_and_clean_tables
+import pyautogui #for screenshots
 
 fpath = os.path.join(os.path.dirname(__file__), '../Models') #Assumes this file lives in a tests folder next to the Models folder
 sys.path.append(fpath)
@@ -144,6 +145,8 @@ class Basic_Web_Tests(unittest.TestCase):
             self.browser.get(self.url)
             self.enter_and_submit_user_info(username, "12345_abcde", "hi@gmail.com")
             wait(self.browser, 0.5)
+
+            self.browser.save_screenshot(f"invalid_info.png")
 
             self.assertEqual(self.browser.title, "Yahtzee: User Details", f"Should redirect to user_details.html")
             feedback_element = self.browser.find_element(By.ID, "feedback")
