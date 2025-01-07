@@ -41,7 +41,7 @@ def users():
                 return render_template('user_games.html', user_dict=user_dict, feedback="User info updated!", user_games=user_games, high_scores=high_scores)
             
             else:
-                return render_template('user_games.html', feedback="That user doesn't exist!")
+                return render_template('user_games.html', user_dict=user_dict, feedback="That user doesn't exist!")
 
         elif action == 'Create':
             user_games = []
@@ -49,14 +49,14 @@ def users():
             user_exists = User.exists(username=user_info['username'])
             
             if user_exists["data"]:
-                return render_template('user_details.html', feedback="This user already exists!")
+                return render_template('user_details.html', user_dict=user_dict, feedback="This user already exists!")
             
             create_user = User.create(user_info)
             print("okay???", create_user)
             if create_user["status"] != 'success':
                 return render_template('user_details.html', user_dict=user_dict, feedback=create_user['data'])
-
-            return render_template('user_games.html', user_dict=user_dict, feedback="New user created!", user_games=user_games, high_scores=high_scores)
+            else:
+                return render_template('user_games.html', user_dict=user_dict, feedback="New user created!", user_games=user_games, high_scores=high_scores)
 
         elif action=='Delete':
             removed_user = User.remove(user_info['username'])
@@ -66,3 +66,35 @@ def users():
                 return render_template('login.html', feedback="User deleted!")
         
     return render_template('user_details.html')
+
+def specific_user(username):
+    print(f"request.method= {request.method} request.url={request.url}")
+    print(f"request.url={request.query_string}")
+
+    print(request.form)
+
+    u_dict = User.get(username=username)['data']
+    if u_dict['status'] == 'success':
+        user_dict = u_dict
+    else:
+        user_dict = {}
+
+
+    if request.method == 'GET':
+        return render_template('user_details.html', user_dict=user_dict)
+    
+    if request.method == 'POST':
+        action=request.form.get('action')
+        if action == 'Update':
+            user_info = {
+                "username": request.form.get('username'),
+                "password": request.form.get('password'),
+                "email": request.form.get('email')
+            }
+            feedback = User.update(user_info)['data']
+            print(feedback)
+
+            return render_template('user_details.html', user_dict=user_dict)
+        
+        elif action == 'Delete':
+            return render_template('user_details.html', feedback=feedback, user_dict=user_dict)
