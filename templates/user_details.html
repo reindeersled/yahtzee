@@ -14,6 +14,10 @@
     
     <section id="feedback">{{feedback}}</section>
     <form action="/users" method="POST">
+        {% if user_dict %}
+        <input id="id_input" type="hidden" name="id" value="{{user_dict['id']}}"/> 
+        {% endif %}
+        
         <label for="username_input">User name:</label>
         <input id="username_input" type="text" name="username" /> <br />
      

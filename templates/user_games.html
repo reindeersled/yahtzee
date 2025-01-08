@@ -12,7 +12,7 @@
   </head>
   <body>
     <h1>{{ user_dict.username }} Games</h1>
-    <p>{{feedback}}</p>
+    <section id="feedback">{{feedback}}</section>
 
     {% for game in user_games %}
       <ol>{{ game.name }}</ol> <button type="button" class="btn btn-danger">Delete</button>

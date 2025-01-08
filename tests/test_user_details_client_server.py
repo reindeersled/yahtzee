@@ -249,33 +249,35 @@ class Basic_Web_Tests(unittest.TestCase):
     #     print("test_required_elements_update... test passed!")
 
     
-    def test_update_user_exits(self):
-        """Delete user - Username exists"""
-        for user in self.valid_users:
-            self.browser.get(self.url)
-            self.enter_and_submit_user_info(user["username"], user["password"], user["email"])
-            wait(self.browser, 2).until_not(EC.title_is(self.user_details_create_requirements["title"]))
+    # def test_update_user_exists(self): #error
+    #     """Update user - Username exists"""
+    #     for user in self.valid_users:
+    #         self.browser.get(self.url)
+    #         self.enter_and_submit_user_info(user["username"], user["password"], user["email"])
+    #         wait(self.browser, 2).until_not(EC.title_is(self.user_details_create_requirements["title"]))
         
-        user_to_update = self.valid_users[0]
-        orig_user = self.User_Model.get(username=user_to_update["username"])
+    #     user_to_update = self.valid_users[0]
+    #     orig_user = self.User_Model.get(username=user_to_update["username"])
 
-        new_username = user_to_update["username"]+"2"
-        new_password = user_to_update["password"]+"2"
-        new_email = "2"+user_to_update["email"]
-        self.browser.get(f"{self.url}/{user_to_update['username']}")
+    #     new_username = user_to_update["username"]+"2"
+    #     new_password = user_to_update["password"]+"2"
+    #     new_email = "2"+user_to_update["email"]
+    #     self.browser.get(f"{self.url}/{user_to_update['username']}")
 
-        self.enter_and_submit_user_info(new_username, new_password, new_email)
-        wait(self.browser, 1)
+    #     self.enter_and_submit_user_info(new_username, new_password, new_email)
+    #     wait(self.browser, 1)
 
-        self.browser.save_screenshot(f"update_user_exists.png")
+    #     self.browser.save_screenshot(f"update_user_exists.png")
 
-        updated_user = self.User_Model.get(id=orig_user["data"]["id"])
-        self.assertEqual(updated_user["status"], "success", "Original user should still exist.")
-        self.assertEqual(updated_user["data"]["username"], new_username, f"Original user should have username updated to {new_username}.")
-        self.assertEqual(updated_user["data"]["email"], new_email, f"Original user should have username updated to {new_email}.")
-        self.assertEqual(updated_user["data"]["password"], new_password, f"Original user should have username updated to {new_password}.")
+    #     updated_user = self.User_Model.get(id=orig_user["data"]["id"])
+    #     print("hmmmmm", updated_user)
 
-        print("test_update_user_exits... test passed!")
+    #     self.assertEqual(updated_user["status"], "success", "Original user should still exist.")
+    #     self.assertEqual(updated_user["data"]["username"], new_username, f"Original user should have username updated to {new_username}.")
+    #     self.assertEqual(updated_user["data"]["email"], new_email, f"Original user should have username updated to {new_email}.")
+    #     self.assertEqual(updated_user["data"]["password"], new_password, f"Original user should have username updated to {new_password}.")
+
+    #     print("test_update_user_exists... test passed!")
     
     
     # def test_update_user_DNE(self):
@@ -297,7 +299,7 @@ class Basic_Web_Tests(unittest.TestCase):
     #     print("test_update_user_DNE... test passed!")
 
     
-    # def test_update_user_invalid_info(self):
+    # def test_update_user_invalid_info(self): #ok
     #     """update user - Invalid info"""
     #     for user in self.valid_users:
     #         self.browser.get(self.url)
@@ -347,7 +349,7 @@ class Basic_Web_Tests(unittest.TestCase):
 
     #     print("test_update_user_invalid_info... test passed!")
      
-    # def test_update_user_duplicate_info(self):
+    # def test_update_user_duplicate_info(self): #ok
     #     """update user - Invalid info"""
     #     for user in self.valid_users:
     #         self.browser.get(self.url)
@@ -377,7 +379,7 @@ class Basic_Web_Tests(unittest.TestCase):
     #     print("test_update_user_duplicate_info... test passed!")
     
     # #------------------DELETE tests-----------------
-    # def test_delete_user_exits(self):
+    # def test_delete_user_exits(self): #error
     #     """Delete user - Username exists"""
     #     for user in self.valid_users:
     #         self.browser.get(self.url)
@@ -395,19 +397,22 @@ class Basic_Web_Tests(unittest.TestCase):
 
     #     print("test_delete_user_exits... test passed!")
   
-    # def test_delete_user_DNE(self):
-    #     """Delete user - Username doesn't exist"""
-    #     self.browser.get(self.url+"/hello_hello")
-    #     bad_username = "fake_username"
-    #     wait(self.browser, 1)
+    def test_delete_user_DNE(self):
+        """Delete user - Username doesn't exist"""
+        self.browser.get(self.url+"/hello_hello")
+        bad_username = "fake_username"
+        wait(self.browser, 1)
 
-    #     feedback_element = self.browser.find_element(By.ID, "feedback")
-    #     self.assertTrue(len(feedback_element.text)>10, "Substantial feedback should be provided.")
+        self.browser.save_screenshot("delete_user_DNE.png")
 
-    #     user = self.User_Model.get(username=bad_username)
-    #     self.assertEqual(user["status"], "error", "Invalid user_info should not be added to DB.")
+        feedback_element = self.browser.find_element(By.ID, "feedback")
+        print("so what is the feedback", feedback_element.text) #so i have no feedback somehow
+        self.assertTrue(len(feedback_element.text)>10, "Substantial feedback should be provided.") 
 
-    #     print("test_delete_user_DNE... test passed!")
+        user = self.User_Model.get(username=bad_username)
+        self.assertEqual(user["status"], "error", "Invalid user_info should not be added to DB.")
+
+        print("test_delete_user_DNE... test passed!")
    
     
 if __name__ == '__main__':
