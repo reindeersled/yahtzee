@@ -14,10 +14,6 @@
     
     <section id="feedback">{{feedback}}</section>
     <form action="/users" method="POST">
-        {% if user_dict %}
-        <input id="id_input" type="hidden" name="id" value="{{user_dict['id']}}"/> 
-        {% endif %}
-        
         <label for="username_input">User name:</label>
         <input id="username_input" type="text" name="username" /> <br />
      
@@ -27,8 +23,14 @@
         <label for="email_input">Email:</label>
         <input id="email_input" type="text" name="email" /> <br />
      
-        <input type="submit" name="action" id="user_details_delete_submit" value="Delete" />
-        <input type="submit" name="action" id="user_details_submit" value="{% if user_dict %}Update{% else %}Create{% endif %}" /> <!--update too eventually-->
+        {% if user_dict %}
+          <input id="id_input" type="hidden" name="id" value="{{user_dict['id']}}"/> 
+
+          <input type="submit" name="action" id="user_details_submit" value="Update" />
+          <input type="submit" name="action" id="user_details_delete_submit" value="Delete" />
+        {% else %}
+          <input type="submit" name="action" id="user_details_submit" value="Create" />
+        {% endif %}
 
     </form>
 

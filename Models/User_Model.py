@@ -109,7 +109,7 @@ class User:
                     "data":error}
         
         finally:
-            db_connection.close()
+            db_connection.close()x
     
     def get(self, username=None, id=None):
         try: 

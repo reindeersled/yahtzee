@@ -379,40 +379,44 @@ class Basic_Web_Tests(unittest.TestCase):
     #     print("test_update_user_duplicate_info... test passed!")
     
     # #------------------DELETE tests-----------------
-    # def test_delete_user_exits(self): #error
-    #     """Delete user - Username exists"""
-    #     for user in self.valid_users:
-    #         self.browser.get(self.url)
-    #         self.enter_and_submit_user_info(user["username"], user["password"], user["email"])
-    #         wait(self.browser, 2).until_not(EC.title_is(self.user_details_update_requirements["title"]))
+    def test_delete_user_exists(self): #error
+        """Delete user - Username exists"""
+        for user in self.valid_users:
+            self.browser.get(self.url)
+            self.enter_and_submit_user_info(user["username"], user["password"], user["email"])
+            wait(self.browser, 2).until_not(EC.title_is(self.user_details_update_requirements["title"]))
 
-    #     username_to_delete= self.valid_users[1]["username"]
-    #     self.browser.get(f"{self.url}/{username_to_delete}")
-    #     submit_button=self.browser.find_element(By.ID, 'user_details_delete_submit')
-    #     submit_button.click()
-    #     wait(self.browser, 1)
-
-    #     user = self.User_Model.get(username=username_to_delete)
-    #     self.assertEqual(user["status"], "error", f"{username_to_delete} should no longer exist in DB.")
-
-    #     print("test_delete_user_exits... test passed!")
-  
-    def test_delete_user_DNE(self):
-        """Delete user - Username doesn't exist"""
-        self.browser.get(self.url+"/hello_hello")
-        bad_username = "fake_username"
+        username_to_delete= self.valid_users[1]["username"]
+        self.browser.get(f"{self.url}/{username_to_delete}")
+        submit_button=self.browser.find_element(By.ID, 'user_details_delete_submit')
+        self.browser.save_screenshot("delete_user_exists0.png")
+        
+        submit_button.click()
         wait(self.browser, 1)
 
-        self.browser.save_screenshot("delete_user_DNE.png")
+        self.browser.save_screenshot("delete_user_exists.png")
 
-        feedback_element = self.browser.find_element(By.ID, "feedback")
-        print("so what is the feedback", feedback_element.text) #so i have no feedback somehow
-        self.assertTrue(len(feedback_element.text)>10, "Substantial feedback should be provided.") 
+        user = self.User_Model.get(username=username_to_delete)
+        self.assertEqual(user["status"], "error", f"{username_to_delete} should no longer exist in DB.")
 
-        user = self.User_Model.get(username=bad_username)
-        self.assertEqual(user["status"], "error", "Invalid user_info should not be added to DB.")
+        print("test_delete_user_exits... test passed!")
+  
 
-        print("test_delete_user_DNE... test passed!")
+    # def test_delete_user_DNE(self): #OK
+    #     """Delete user - Username doesn't exist"""
+    #     self.browser.get(self.url+"/hello_hello")
+    #     bad_username = "fake_username"
+    #     wait(self.browser, 1)
+
+    #     self.browser.save_screenshot("delete_user_DNE.png")
+
+    #     feedback_element = self.browser.find_element(By.ID, "feedback")
+    #     self.assertTrue(len(feedback_element.text)>10, "Substantial feedback should be provided.") 
+
+    #     user = self.User_Model.get(username=bad_username)
+    #     self.assertEqual(user["status"], "error", "Invalid user_info should not be added to DB.")
+
+    #     print("test_delete_user_DNE... test passed!")
    
     
 if __name__ == '__main__':

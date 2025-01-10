@@ -32,7 +32,7 @@ app.add_url_rule('/login', view_func=SessionController.login, methods = ['GET'])
 #users
 app.add_url_rule('/users', view_func=UserController.users, methods = ['GET', 'POST'])
 app.add_url_rule('/users/<username>', view_func=UserController.specific_user, methods = ['GET', 'POST'])
-# app.add_url_rule('/users/delete/<username>', view_func=UserController.delete_user, methods = ['GET'])
+app.add_url_rule('/users/delete/<username>', view_func=UserController.delete_user, methods = ['GET'])
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
