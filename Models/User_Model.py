@@ -83,13 +83,17 @@ class User:
                     return {"status": "error",
                             "data": "bad username! no symbols or spaces"
                             }
-            if len(user_info["password"]) < 4:
+            if len(user_info["password"]) < 8:
                 return {"status": "error",
                         "data": "password too short, try again with a longer one"
                         } 
             if "@" not in user_info["email"] or "." not in user_info["email"]:
                 return {"status": "error",
-                        "data": "bad email, probably invalid"} 
+                        "data": "bad email, must contain @ and ."} 
+            for chara in user_info["email"]:
+                if chara == " ":
+                    return {"status": "error",
+                            "data": "bad email, no spaces allowed"}
             
             
             user_data = (user_id, user_info["email"], user_info["username"], user_info["password"])
@@ -109,7 +113,7 @@ class User:
                     "data":error}
         
         finally:
-            db_connection.close()x
+            db_connection.close()
     
     def get(self, username=None, id=None):
         try: 

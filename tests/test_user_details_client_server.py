@@ -9,7 +9,6 @@ from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 
 from DB_Helper import wipe_and_clean_tables
-import pyautogui #for screenshots
 
 fpath = os.path.join(os.path.dirname(__file__), '../Models') #Assumes this file lives in a tests folder next to the Models folder
 sys.path.append(fpath)
@@ -139,7 +138,7 @@ class Basic_Web_Tests(unittest.TestCase):
     #         self.assertIn(user["username"], all_usernames, f"DB should have user with username {user['username']}")
     #     print("test_create_user... test passed!")
    
-    # def test_create_user_invalid_info(self): #ERROR
+    # def test_create_user_invalid_info(self): #OK
     #     """Submit user information - Incorrect data format produces feedback"""
     #     for username in self.invalid_usernames:
     #         self.browser.get(self.url)
@@ -169,7 +168,7 @@ class Basic_Web_Tests(unittest.TestCase):
     #         self.assertTrue(len(feedback_element.text)>10, "Substantial feedback should be provided.")
 
     #         new_user = self.User_Model.get(username=username)
-    #         self.assertEqual(new_user["status"], "error", "Invalid passowrd should not be added to DB.")
+    #         self.assertEqual(new_user["status"], "error", "Invalid password should not be added to DB.") #hmmm
 
     #     for email in self.invalid_emails:
     #         self.browser.get(self.url)
@@ -184,6 +183,7 @@ class Basic_Web_Tests(unittest.TestCase):
     #         #self.assertTrue(len(feedback_element.text)>10, "Substantial feedback should be provided.")
 
     #         new_user = self.User_Model.get(username=username)
+    #         print("oh um", new_user['data'])
     #         self.assertEqual(new_user["status"], "error", "Invalid email should not be added to DB.")
 
     #     print("test_create_user_invalid_info... test passed!")
@@ -249,35 +249,37 @@ class Basic_Web_Tests(unittest.TestCase):
     #     print("test_required_elements_update... test passed!")
 
     
-    # def test_update_user_exists(self): #error
-    #     """Update user - Username exists"""
-    #     for user in self.valid_users:
-    #         self.browser.get(self.url)
-    #         self.enter_and_submit_user_info(user["username"], user["password"], user["email"])
-    #         wait(self.browser, 2).until_not(EC.title_is(self.user_details_create_requirements["title"]))
+    def test_update_user_exists(self): #error
+        """Update user - Username exists"""
+        for user in self.valid_users:
+            self.browser.get(self.url)
+            self.enter_and_submit_user_info(user["username"], user["password"], user["email"])
+            wait(self.browser, 2).until_not(EC.title_is(self.user_details_create_requirements["title"]))
         
-    #     user_to_update = self.valid_users[0]
-    #     orig_user = self.User_Model.get(username=user_to_update["username"])
+        user_to_update = self.valid_users[0]
+        orig_user = self.User_Model.get(username=user_to_update["username"])
 
-    #     new_username = user_to_update["username"]+"2"
-    #     new_password = user_to_update["password"]+"2"
-    #     new_email = "2"+user_to_update["email"]
-    #     self.browser.get(f"{self.url}/{user_to_update['username']}")
+        new_username = user_to_update["username"]+"2"
+        new_password = user_to_update["password"]+"2"
+        new_email = "2"+user_to_update["email"]
 
-    #     self.enter_and_submit_user_info(new_username, new_password, new_email)
-    #     wait(self.browser, 1)
+        self.browser.get(f"{self.url}/{user_to_update['username']}") #???? why isnt my screenshot screenshotting
+        self.browser.save_screenshot(f"update_user_exists1.png")
 
-    #     self.browser.save_screenshot(f"update_user_exists.png")
+        print(user_to_update["username"], user_to_update["password"], user_to_update["email"])
+        self.enter_and_submit_user_info(new_username, new_password, new_email)
+        wait(self.browser, 1)
 
-    #     updated_user = self.User_Model.get(id=orig_user["data"]["id"])
-    #     print("hmmmmm", updated_user)
+        self.browser.save_screenshot(f"update_user_exists.png")
 
-    #     self.assertEqual(updated_user["status"], "success", "Original user should still exist.")
-    #     self.assertEqual(updated_user["data"]["username"], new_username, f"Original user should have username updated to {new_username}.")
-    #     self.assertEqual(updated_user["data"]["email"], new_email, f"Original user should have username updated to {new_email}.")
-    #     self.assertEqual(updated_user["data"]["password"], new_password, f"Original user should have username updated to {new_password}.")
+        updated_user = self.User_Model.get(id=orig_user["data"]["id"])
 
-    #     print("test_update_user_exists... test passed!")
+        self.assertEqual(updated_user["status"], "success", "Original user should still exist.")
+        self.assertEqual(updated_user["data"]["username"], new_username, f"Original user should have username updated to {new_username}.")
+        self.assertEqual(updated_user["data"]["email"], new_email, f"Original user should have username updated to {new_email}.")
+        self.assertEqual(updated_user["data"]["password"], new_password, f"Original user should have username updated to {new_password}.")
+
+        print("test_update_user_exists... test passed!")
     
     
     # def test_update_user_DNE(self):
@@ -379,27 +381,27 @@ class Basic_Web_Tests(unittest.TestCase):
     #     print("test_update_user_duplicate_info... test passed!")
     
     # #------------------DELETE tests-----------------
-    def test_delete_user_exists(self): #error
-        """Delete user - Username exists"""
-        for user in self.valid_users:
-            self.browser.get(self.url)
-            self.enter_and_submit_user_info(user["username"], user["password"], user["email"])
-            wait(self.browser, 2).until_not(EC.title_is(self.user_details_update_requirements["title"]))
+    # def test_delete_user_exists(self): #error
+    #     """Delete user - Username exists"""
+    #     for user in self.valid_users:
+    #         self.browser.get(self.url)
+    #         self.enter_and_submit_user_info(user["username"], user["password"], user["email"])
+    #         wait(self.browser, 2).until_not(EC.title_is(self.user_details_update_requirements["title"]))
 
-        username_to_delete= self.valid_users[1]["username"]
-        self.browser.get(f"{self.url}/{username_to_delete}")
-        submit_button=self.browser.find_element(By.ID, 'user_details_delete_submit')
-        self.browser.save_screenshot("delete_user_exists0.png")
+    #     username_to_delete= self.valid_users[1]["username"]
+    #     self.browser.get(f"{self.url}/{username_to_delete}")
+    #     submit_button=self.browser.find_element(By.ID, 'user_details_delete_submit')
+    #     self.browser.save_screenshot("delete_user_exists0.png")
         
-        submit_button.click()
-        wait(self.browser, 1)
+    #     submit_button.click()
+    #     wait(self.browser, 1)
 
-        self.browser.save_screenshot("delete_user_exists.png")
+    #     self.browser.save_screenshot("delete_user_exists.png")
 
-        user = self.User_Model.get(username=username_to_delete)
-        self.assertEqual(user["status"], "error", f"{username_to_delete} should no longer exist in DB.")
+    #     user = self.User_Model.get(username=username_to_delete)
+    #     self.assertEqual(user["status"], "error", f"{username_to_delete} should no longer exist in DB.")
 
-        print("test_delete_user_exits... test passed!")
+    #     print("test_delete_user_exits... test passed!")
   
 
     # def test_delete_user_DNE(self): #OK
