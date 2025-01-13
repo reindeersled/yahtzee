@@ -67,8 +67,6 @@ def users():
                     feedback = "New user created!"
                     user_dict = User.get(username=user_info['username'])
                 return render_template('user_details.html', user_dict=user_dict, feedback=feedback)
-
-
         
         elif action == 'Delete':
             print("DELETING")
@@ -139,7 +137,7 @@ def delete_user(username):
 
     if removed_user['status'] != 'success':
         print("UNSUCCESSFUL", removed_user['data'])
-        return render_template('user_details.html', feedback=removed_user['data'], user_dict=u_dict)
+        return render_template('user_details.html', feedback=removed_user['data'], user_dict=user_dict)
     else:
         print("SUCCESSFUL", removed_user['data'])
         return render_template('login.html', feedback="User successfully deleted!")

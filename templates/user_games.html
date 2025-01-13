@@ -14,18 +14,25 @@
     <h1>{{ user_dict.username }} Games</h1>
     <section id="feedback">{{feedback}}</section>
 
+    <ol id="games_list">
     {% for game in user_games %}
-      <ol>{{ game.name }}</ol> <button type="button" class="btn btn-danger">Delete</button>
+      <li>{{ game.name }}</li>
+      <button type="button" class="btn btn-danger" value="Delete">Delete</button>
     {% endfor %}
+    </ol>
 
     <form action="/create" method="POST">
-      <input id="new_game" type="text" name="new_game" /> <button type="button" class="btn btn-success">Create</button> <button type="button" class="btn btn-primary">Join</button>
+      <input type="text" name="game_name_input" id="game_name_input"/> 
+      <button type="button" class="btn btn-success" value="Create">Create</button>
+      <button type="button" class="btn btn-primary" value="Join">Join</button>
     </form>
 
     <h3>Your High Scores</h3>
+    <ol id="high_scores_list">
     {% for score in high_scores %}
-      <ol> {{ game.name }} : {{ score }}</ol>
+      <li>{{ game.name }} : {{ score }}</li>
     {% endfor %}
+    </ol>
 
     {% include 'partial/footer.html' %}
   </body>
