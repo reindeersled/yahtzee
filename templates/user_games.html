@@ -15,22 +15,28 @@
     <section id="feedback">{{feedback}}</section>
 
     <ol id="games_list">
-    {% for game in user_games %}
-      <li>{{ game.name }}</li>
-      <button type="button" class="btn btn-danger" value="Delete">Delete</button>
-    {% endfor %}
+      {% for game in games %}
+        <li>
+          <a href="/games/{{game.name}}/{{user_dict.username}}">{{ game.name }}</a>
+          <a href="/games/delete/{{game.name}}/{{user_dict.username}}" class="btn btn-danger" role="button">Delete</a>
+        </li>
+      {% endfor %}
     </ol>
 
-    <form action="/create" method="POST">
+    <form action="/games" method="POST">
+      <input id="id_input" type="hidden" name="id" value="{{user_dict['id']}}"/> 
+      <input id="username_input" type="hidden" name="username" value="{{user_dict['username']}}">
+
       <input type="text" name="game_name_input" id="game_name_input"/> 
-      <button type="button" class="btn btn-success" value="Create">Create</button>
-      <button type="button" class="btn btn-primary" value="Join">Join</button>
+      
+      <input type="submit" name="action" id="create_submit" value="Create" value="Create"/>
+      <input type="submit" name="action" id="join_submit" formaction="/games/join" value="Join"/>
     </form>
 
     <h3>Your High Scores</h3>
     <ol id="high_scores_list">
     {% for score in high_scores %}
-      <li>{{ game.name }} : {{ score }}</li>
+      <li>{{ score[0] }} : {{ score[1] }}</li>
     {% endfor %}
     </ol>
 

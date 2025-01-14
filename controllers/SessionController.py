@@ -30,8 +30,7 @@ def login():
             user_dict = User.get(username=username)["data"]
 
             if password == user_dict["password"]:
-                return render_template('user_games.html', feedback="Logged in!", user_dict=user_dict)
-            
+                return redirect(f'/games/{username}')
             else:
                 return render_template('login.html', feedback="Wrong password!")
         

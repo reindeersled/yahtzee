@@ -194,13 +194,17 @@ class User:
                     return {"status": "error",
                             "data": "bad username! no symbols or spaces"
                             }
-            if len(user_info["password"]) < 4:
+            if len(user_info["password"]) < 8:
                 return {"status": "error",
                         "data": "password too short, try again with a longer one"
                         } 
             if "@" not in user_info["email"] or "." not in user_info["email"]:
                 return {"status": "error",
                         "data": "bad email, probably invalid"} 
+            for letter in user_info['email']:
+                if letter == " ":
+                    return {"status": "error",
+                        "data": "bad email, no spaces"} 
 
             
             cursor.execute(f"""UPDATE {self.table_name} 

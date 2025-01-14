@@ -83,6 +83,7 @@ class Scorecard:
                     return {"status": "success",
                             "data": self.to_dict(card_info)}  
                 else:
+                    print(f"table name is {self.table_name}")
                     return {"status": "error",
                             "data": "No card found"}
             

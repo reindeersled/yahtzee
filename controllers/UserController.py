@@ -37,6 +37,7 @@ def users():
         else:
             feedback = "New user created!"
             user_dict = create_user['data']
+            return render_template('user_games.html', user_dict=user_dict, feedback=feedback)
 
         return render_template('user_details.html', user_dict=user_dict, feedback=feedback)
 
