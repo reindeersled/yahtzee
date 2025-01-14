@@ -254,6 +254,12 @@ class Basic_Web_Tests(unittest.TestCase):
         for user in self.valid_users:
             self.browser.get(self.url)
             self.enter_and_submit_user_info(user["username"], user["password"], user["email"])
+            
+            print(f"Page title: {self.browser.title}")
+            self.browser.save_screenshot("form_submission_state.png")
+            print(self.browser.page_source)
+
+
             wait(self.browser, 2).until_not(EC.title_is(self.user_details_create_requirements["title"]))
         
         user_to_update = self.valid_users[0]
