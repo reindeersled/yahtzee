@@ -52,12 +52,12 @@ def update_user(username):
             user_dict = {}
         else:
             user_dict = get['data']
-        return render_template('user_details.html', user_dict={}, feedback=get['data'])
+        return render_template('user_details.html', user_dict=user_dict, feedback=get['data'])
 
     elif request.method == 'POST':
         user_info = User.get(username=username)
         new_user_info = {
-                "id": user_info['id'],
+                "id": user_info['data']['id'],
                 "username": request.form.get('username'),
                 "password": request.form.get('password'),
                 "email": request.form.get('email')
@@ -65,7 +65,7 @@ def update_user(username):
         update = User.update(new_user_info)
         if update['status'] != 'success':
             feedback = update['data']
-            u_dict = user_info
+            u_dict = user_info['data']
         else:
             feedback = "Succesfully updated user details!"
             u_dict = new_user_info
@@ -73,21 +73,12 @@ def update_user(username):
         return render_template('user_details.html', user_dict=u_dict, feedback=feedback)
 
 def delete_user(username):
-    print("trying to delete...")
     print(f"request.method= {request.method} request.url={request.url}")
     print(f"request.url={request.query_string}")
 
-    u_dict = User.get(username=username)['data']
-    if (isinstance(u_dict, dict)):
-        user_dict = u_dict
-    else:
-        user_dict = {}
-
     removed_user = User.remove(username)
-
-    if removed_user['status'] != 'success':
-        print("UNSUCCESSFUL", removed_user['data'])
+    if removed_user['status'] == 'error':
+        user_dict = User.get(username=username)['data']
         return render_template('user_details.html', feedback=removed_user['data'], user_dict=user_dict)
     else:
-        print("SUCCESSFUL", removed_user['data'])
         return render_template('login.html', feedback="User successfully deleted!")
